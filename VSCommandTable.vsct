@@ -1,0 +1,64 @@
+﻿<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Commands package="BacklogChatGPTAssistant">
+
+    <Groups>
+      <Group guid="BacklogChatGPTAssistant" id="MyGroupForSubMenu" />
+      <Group guid="BacklogChatGPTAssistant" id="MyGroupForCommands" />
+    </Groups>
+
+    <Menus>
+      <Menu guid="BacklogChatGPTAssistant" id="MySubMenu" type="Menu">
+        <Strings>
+          <ButtonText>Backlog chatGPT Assistant</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Buttons>      
+      <Button guid="guidBacklogChatGPTAssistantPackageCmdSet" id="cmdidTerminalWindowCommand" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+        <Icon guid="BacklogChatGPTAssistantChatGPTIcon" id="scrumIcon" />
+        <Strings>
+          <ButtonText>Backlog chatGPT Assistant</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="BacklogChatGPTAssistantChatGPTIcon" href="Resources\scrum.png" usedList="scrumIcon"/>
+    </Bitmaps>
+  </Commands>
+
+  <CommandPlacements>
+    <CommandPlacement guid="BacklogChatGPTAssistant" id="MyGroupForSubMenu" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="BacklogChatGPTAssistant" id="MySubMenu" priority="0x100">
+      <Parent guid="BacklogChatGPTAssistant" id="MyGroupForSubMenu"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="BacklogChatGPTAssistant" id="MyGroupForCommands" priority="0x0100">
+      <Parent guid="BacklogChatGPTAssistant" id="MySubMenu"/>
+    </CommandPlacement>
+  </CommandPlacements>
+
+  <Symbols>
+    <GuidSymbol name="BacklogChatGPTAssistant" value="{12663A67-367C-44B7-B979-35D6BF13C8D1}">
+      <IDSymbol name="MyGroupForSubMenu" value="0x1000" />
+      <IDSymbol name="MyGroupForCommands" value="0x1001" />
+      <IDSymbol name="MySubMenu" value="0x2000" />
+    </GuidSymbol>
+
+    <GuidSymbol value="{595D8438-C4C0-4338-A8E9-AC256D93F5B9}" name="guidBacklogChatGPTAssistantPackageCmdSet">
+      <IDSymbol value="256" name="cmdidTerminalWindowCommand" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="BacklogChatGPTAssistantChatGPTIcon" value="{9FE8402E-493D-4A2F-B7BB-3ED9FEB64B61}">
+      <IDSymbol name="scrumIcon" value="1" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

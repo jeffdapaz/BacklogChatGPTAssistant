@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>8d02bb3e-2996-4b5c-a4be-c1514b7b93df</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>JeffPires.BacklogChatGPTAssistantShared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\TerminalWindowCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\OptionPageGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ToolWindows\TerminalWindow\TerminalWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolWindows\TerminalWindow\TerminalWindowControl.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\ChatGPT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\EnumHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Http\ChatGPTHttpClientFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Http\HttpClientCustom.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Http\RequestCaptureHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\TextFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BacklogChatGPTAssistantPackage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)ToolWindows\TerminalWindow\TerminalWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)ToolWindows\TerminalWindow\" />
+  </ItemGroup>
+</Project>

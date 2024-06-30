@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="BacklogChatGPTAssistant.20F8C965-0DA2-4698-AF55-FF046627A73F" Version="1.0.0" Language="en-US" Publisher="Jefferson Pires" />
+        <DisplayName>Backlog ChatGPT Assistant</DisplayName>
+        <Description xml:space="preserve">Adds to Visual Studio the ability to automate the creation of backlog items in Azure Devops with the power of artificial intelligence.</Description>
+        <Icon>logo.png</Icon>
+        <PreviewImage>Resources\Icon.png</PreviewImage>
+        <Tags>chatGPT, OpenAI, Visual Studio, Azure, Devops, Backlog</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+            <ProductArchitecture>arm64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
+</PackageManifest>
