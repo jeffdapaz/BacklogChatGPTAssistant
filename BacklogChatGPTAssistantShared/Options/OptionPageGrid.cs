@@ -150,5 +150,21 @@ namespace JeffPires.BacklogChatGPTAssistant.Options
         public string CustomModel { get; set; } = "";
 
         #endregion OpenAI
+
+        #region Azure Devops
+
+        [Category("Azure Devops")]
+        [DisplayName("URL")]
+        [Description("Set the Azure Devops URL.")]
+        [DefaultValue("")]
+        public string AzureDevopsUrl { get; set; } = string.Empty;
+
+        [Category("Azure Devops")]
+        [DisplayName("Personal Access Token")]
+        [Description("Set your PAT (optional). Personal Access Token (PAT) in Azure DevOps is a security token that allows you to authenticate and access Azure DevOps. If you do not provide a value, you will be asked for your credentials.")]
+        [DefaultValue("")]
+        public string AzureDevopsPAT { get; set; } = string.Empty;
+
+        #endregion Azure Devops
     }
 }
