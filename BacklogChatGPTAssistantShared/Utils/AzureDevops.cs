@@ -21,8 +21,14 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
     /// </summary>
     static class AzureDevops
     {
+        #region Attributes
+
         private static OptionPageGridGeneral options;
         private static VssConnection vssConnection;
+
+        #endregion Attributes
+
+        #region Public Methods
 
         /// <summary>
         /// Logs in to Azure DevOps using the provided options.
@@ -235,6 +241,10 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
             return newWorkItem.Id.Value;
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         /// <summary>
         /// Recursively retrieves all iteration paths from a given WorkItemClassificationNode and adds them to a list.
         /// </summary>
@@ -257,6 +267,8 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
                 iterationPaths.Add(currentPath);
             }
         }
+
+        #endregion Private Methods
     }
 
     /// <summary>

@@ -18,7 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ToolWindows\TerminalWindow\TerminalWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolWindows\TerminalWindow\TerminalWindowControl.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\AzureDevops.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utils\ChatGPT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\OpenAI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\EnumHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Http\ChatGPTHttpClientFactory.cs" />
