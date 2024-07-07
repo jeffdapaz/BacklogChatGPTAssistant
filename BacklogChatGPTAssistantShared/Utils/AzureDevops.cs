@@ -34,7 +34,7 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         /// Logs in to Azure DevOps using the provided options.
         /// </summary>
         /// <param name="optionPageGridGeneral">The general options for the connection, including credentials and URL.</param>
-        public static async Task LoginAsync(OptionPageGridGeneral optionPageGridGeneral)
+        public static async System.Threading.Tasks.Task LoginAsync(OptionPageGridGeneral optionPageGridGeneral)
         {
             options = optionPageGridGeneral;
 
@@ -112,9 +112,9 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         /// <returns>
         /// Result contains a list of work items matching the specified criteria.
         /// </returns>
-        public static async Task<List<Models.WorkItem>> ListWorkItemsAsync(string projectName, string iterationPath, WorkItemType workItemType)
+        public static async Task<List<WorkItemBase>> ListWorkItemsAsync(string projectName, string iterationPath, WorkItemType workItemType)
         {
-            List<Models.WorkItem> result = [];
+            List<WorkItemBase> result = [];
 
             string wiqlQuery = $@"
                SELECT [System.Id], [System.Title], [System.State]
@@ -137,11 +137,11 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
 
             int[] ids = queryResult.WorkItems.Select(wi => wi.Id).ToArray();
 
-            List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem> workItems = await workItemTrackingClient.GetWorkItemsAsync(ids);
+            List<WorkItem> workItems = await workItemTrackingClient.GetWorkItemsAsync(ids);
 
-            foreach (Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem workItem in workItems)
+            foreach (WorkItem workItem in workItems)
             {
-                Models.WorkItem workItemResult = new()
+                WorkItemBase workItemResult = new()
                 {
                     Id = workItem.Id.Value,
                     Type = workItemType,
@@ -164,7 +164,7 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         /// <returns>
         /// The ID of the newly created work item.
         /// </returns>
-        public static async Task<int> CreateWorkItemAsync(Project project, Models.WorkItem workItem)
+        public static async Task<int> CreateWorkItemAsync(Project project, WorkItemBase workItem)
         {
             JsonPatchDocument patchDocument = new();
 
@@ -236,7 +236,7 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
 
             WorkItemTrackingHttpClient workItemTrackingClient = vssConnection.GetClient<WorkItemTrackingHttpClient>();
 
-            Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem newWorkItem = await workItemTrackingClient.CreateWorkItemAsync(patchDocument, project.Id, workItem.Type.GetStringValue());
+            WorkItem newWorkItem = await workItemTrackingClient.CreateWorkItemAsync(patchDocument, project.Id, workItem.Type.GetStringValue());
 
             return newWorkItem.Id.Value;
         }

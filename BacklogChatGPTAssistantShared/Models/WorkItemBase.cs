@@ -3,9 +3,9 @@
 namespace JeffPires.BacklogChatGPTAssistantShared.Models
 {
     /// <summary>
-    /// Represents a Azure Devops Work Item.
+    /// Represents the base class for a work item.
     /// </summary>
-    public class WorkItem
+    public class WorkItemBase
     {
         /// <summary>
         /// Gets or sets the unique identifier.

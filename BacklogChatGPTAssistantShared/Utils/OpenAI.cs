@@ -1,10 +1,13 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Options;
+using JeffPires.BacklogChatGPTAssistant.Utils;
 using JeffPires.BacklogChatGPTAssistant.Utils.Http;
 using OpenAI;
 using OpenAI.Managers;
 using OpenAI.ObjectModels.RequestModels;
+using OpenAI.ObjectModels.ResponseModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,13 +33,15 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         /// Sends a request to the OpenAI or Azure service based on the provided options and returns the response.
         /// </summary>
         /// <param name="options">Configuration options for the service.</param>
-        /// <param name="systemMessage">The system message to include in the request.</param>
-        /// <param name="request">The user request to send.</param>
+        /// <param name="systemMessages">List of system messages to include in the request.</param>
+        /// <param name="userMessages">List of user messages to include in the request.</param>
+        /// <param name="isJsonResponseFormat">Indicates whether the response should be in JSON format.</param>
         /// <param name="cancellationToken">Token to monitor for cancellation requests.</param>
         /// <returns>
-        /// Contains the response from the service.
+        /// The response from the service as a string.
         /// </returns>
-        public static async Task<string> RequestAsync(OptionPageGridGeneral options, string systemMessage, string request, CancellationToken cancellationToken)
+        /// <exception cref="Exception">Thrown when the service returns an error or an unknown error occurs.</exception>
+        public static async Task<string> RequestAsync(OptionPageGridGeneral options, List<string> systemMessages, List<string> userMessages, bool isJsonResponseFormat, CancellationToken cancellationToken)
         {
             OpenAIService service;
 
@@ -53,13 +58,21 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
                 service = azureService;
             }
 
-            var completionResult = await service.Completions.CreateCompletion(new ChatCompletionCreateRequest()
+            List<ChatMessage> chatMessages = [];
+
+            foreach (string systemMessage in systemMessages)
             {
-                Messages = new List<ChatMessage>
-                {
-                    ChatMessage.FromSystem(systemMessage),
-                    ChatMessage.FromUser(request)
-                },
+                chatMessages.Add(ChatMessage.FromSystem(systemMessage));
+            }
+
+            foreach (string userMessage in userMessages)
+            {
+                chatMessages.Add(ChatMessage.FromUser(userMessage));
+            }
+
+            ChatCompletionCreateResponse completionResult = await service.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
+            {
+                Messages = chatMessages,
                 Model = string.IsNullOrWhiteSpace(options.CustomModel) ? options.Model.GetStringValue() : options.CustomModel,
                 FrequencyPenalty = (float)options.FrequencyPenalty,
                 MaxTokens = options.MaxTokens,
@@ -67,12 +80,13 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
                 StopAsList = options.StopSequences.Split(),
                 Temperature = (float)options.Temperature,
                 TopP = (float)options.TopP,
-                User = BacklogChatGPTAssistant.Utils.Constants.EXTENSION_NAME
+                User = Constants.EXTENSION_NAME,
+                ResponseFormat = isJsonResponseFormat ? new ResponseFormat() { Type = "json_object" } : null
             }, cancellationToken: cancellationToken);
 
             if (completionResult.Successful)
             {
-                return completionResult.Choices.FirstOrDefault();
+                return completionResult.Choices.FirstOrDefault().Message.Content;
             }
             else
             {
@@ -211,6 +225,25 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         }
 
         #endregion Private Methods
+    }
+
+    /// <summary>
+    /// Enum containing the different types of model languages.
+    /// </summary>
+    public enum ModelLanguageEnum
+    {
+        [EnumStringValue("gpt-3.5-turbo")]
+        GPT_3_5_Turbo,
+        [EnumStringValue("gpt-3.5-turbo-1106")]
+        GPT_3_5_Turbo_1106,
+        [EnumStringValue("gpt-4")]
+        GPT_4,
+        [EnumStringValue("gpt-4-32k")]
+        GPT_4_32K,
+        [EnumStringValue("gpt-4-turbo")]
+        GPT_4_Turbo,
+        [EnumStringValue("gpt-4o")]
+        GPT_4o
     }
 
     /// <summary>

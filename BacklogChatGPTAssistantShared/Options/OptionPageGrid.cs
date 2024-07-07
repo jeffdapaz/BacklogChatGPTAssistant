@@ -1,4 +1,4 @@
-﻿using JeffPires.BacklogChatGPTAssistant.Utils;
+﻿using JeffPires.BacklogChatGPTAssistantShared.Utils;
 using Microsoft.VisualStudio.Shell;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -21,9 +21,9 @@ namespace JeffPires.BacklogChatGPTAssistant.Options
         [Category("General")]
         [DisplayName("OpenAI Service")]
         [Description("Select how to connect: OpenAI API or Azure OpenAI.")]
-        [DefaultValue(OpenAIService.OpenAI)]
+        [DefaultValue(ServiceType.OpenAI)]
         [TypeConverter(typeof(EnumConverter))]
-        public OpenAIService Service { get; set; }
+        public ServiceType Service { get; set; }
 
         [Category("General")]
         [DisplayName("Proxy")]
