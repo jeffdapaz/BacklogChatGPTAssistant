@@ -34,7 +34,7 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         /// Logs in to Azure DevOps using the provided options.
         /// </summary>
         /// <param name="optionPageGridGeneral">The general options for the connection, including credentials and URL.</param>
-        public static async System.Threading.Tasks.Task LoginAsync(OptionPageGridGeneral optionPageGridGeneral)
+        public static void Login(OptionPageGridGeneral optionPageGridGeneral)
         {
             options = optionPageGridGeneral;
 
@@ -51,7 +51,7 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
 
             vssConnection = new VssConnection(new Uri(options.AzureDevopsUrl), credentials);
 
-            await vssConnection.ConnectAsync();
+            vssConnection.ConnectAsync().SyncResult();
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
                 result.Add(project);
             }
 
-            return result;
+            return result.OrderBy(r => r.Name).ToList();
         }
 
         /// <summary>

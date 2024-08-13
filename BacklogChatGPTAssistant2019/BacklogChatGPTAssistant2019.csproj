@@ -93,7 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Betalgo.OpenAI">
-      <Version>8.5.1</Version>
+      <Version>8.6.1</Version>
     </PackageReference>
     <PackageReference Include="Community.VisualStudio.Toolkit.16">
       <Version>16.0.507</Version>
@@ -132,6 +132,12 @@
     </Resource>
     <Resource Include="..\Resources\scrum.png">
       <Link>Resources\scrum.png</Link>
+    </Resource>
+    <Resource Include="..\Resources\information.png">
+      <Link>Resources\information.png</Link>
+    </Resource>
+    <Resource Include="..\Resources\alert.png">
+      <Link>Resources\alert.png</Link>
     </Resource>
     <Content Include="logo2019.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
