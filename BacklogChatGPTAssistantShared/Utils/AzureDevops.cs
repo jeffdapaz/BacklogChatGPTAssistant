@@ -38,18 +38,18 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         {
             options = optionPageGridGeneral;
 
-            VssCredentials credentials;
-
             if (!string.IsNullOrWhiteSpace(options.AzureDevopsPAT))
             {
-                credentials = new VssBasicCredential(string.Empty, options.AzureDevopsPAT);
+                VssBasicCredential credentials = new(string.Empty, options.AzureDevopsPAT);
+
+                vssConnection = new VssConnection(new Uri(options.AzureDevopsUrl), credentials);
             }
             else
             {
-                credentials = new VssClientCredentials(new WindowsCredential(false), new VssFederatedCredential(false), CredentialPromptType.PromptIfNeeded);
-            }
+                VssClientCredentials credentials = new(new WindowsCredential(false), new VssFederatedCredential(false), CredentialPromptType.PromptIfNeeded);
 
-            vssConnection = new VssConnection(new Uri(options.AzureDevopsUrl), credentials);
+                vssConnection = new VssConnection(new Uri(options.AzureDevopsUrl), credentials);
+            }
 
             vssConnection.ConnectAsync().SyncResult();
         }
@@ -60,11 +60,11 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         /// <returns>
         /// Contains an IEnumerable of TeamProjectReference objects.
         /// </returns>
-        public static async Task<List<Project>> ListProjectsAsync()
+        public static List<Project> ListProjects()
         {
             ProjectHttpClient projectClient = vssConnection.GetClient<ProjectHttpClient>();
 
-            IPagedList<TeamProjectReference> projects = await projectClient.GetProjects();
+            IEnumerable<TeamProjectReference> projects = projectClient.GetProjects().Result;
 
             List<Project> result = [];
 
@@ -141,14 +141,22 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
 
             foreach (WorkItem workItem in workItems)
             {
-                WorkItemBase workItemResult = new()
+                WorkItemBase workItemResult = new() { Id = workItem.Id.Value, Type = workItemType };
+
+                if (workItem.Fields.TryGetValue("System.Title", out string title))
                 {
-                    Id = workItem.Id.Value,
-                    Type = workItemType,
-                    Title = workItem.Fields["System.Title"]?.ToString(),
-                    Description = workItem.Fields["System.Description"]?.ToString(),
-                    AcceptanceCriteria = workItem.Fields["System.AcceptanceCriteria"]?.ToString()
-                };
+                    workItemResult.Title = title;
+                }
+
+                if (workItem.Fields.TryGetValue("System.Description", out string description))
+                {
+                    workItemResult.Description = description;
+                }
+
+                if (workItem.Fields.TryGetValue("Microsoft.VSTS.Common.AcceptanceCriteria", out string acceptanceCriteria))
+                {
+                    workItemResult.AcceptanceCriteria = acceptanceCriteria;
+                }
 
                 result.Add(workItemResult);
             }

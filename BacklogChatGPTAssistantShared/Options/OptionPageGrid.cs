@@ -139,9 +139,9 @@ namespace JeffPires.BacklogChatGPTAssistant.Options
         [Category("OpenAI")]
         [DisplayName("Model Language")]
         [Description("See \"https://platform.openai.com/docs/models/overview\" for more details.")]
-        [DefaultValue(ModelLanguageEnum.GPT_3_5_Turbo)]
+        [DefaultValue(ModelLanguageEnum.GPT_4o_Mini)]
         [TypeConverter(typeof(EnumConverter))]
-        public ModelLanguageEnum Model { get; set; } = ModelLanguageEnum.GPT_3_5_Turbo;
+        public ModelLanguageEnum Model { get; set; } = ModelLanguageEnum.GPT_4o_Mini;
 
         [Category("OpenAI")]
         [DisplayName("Model Language Override")]

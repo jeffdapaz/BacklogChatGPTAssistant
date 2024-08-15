@@ -77,7 +77,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             {
                 Logger.Log(ex);
 
-                MessageBox.Show(ex.Message, Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

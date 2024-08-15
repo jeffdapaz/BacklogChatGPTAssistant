@@ -243,7 +243,9 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
         [EnumStringValue("gpt-4-turbo")]
         GPT_4_Turbo,
         [EnumStringValue("gpt-4o")]
-        GPT_4o
+        GPT_4o,
+        [EnumStringValue("gpt-4o-mini")]
+        GPT_4o_Mini
     }
 
     /// <summary>
