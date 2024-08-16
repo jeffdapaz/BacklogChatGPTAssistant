@@ -10,7 +10,24 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
     <UserControl.Resources>
-
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style TargetType="Image">
+            <Setter Property="Width" Value="20"/>
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
+            <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+        </Style>
     </UserControl.Resources>
 
     <UserControl.CommandBindings>
@@ -21,125 +38,151 @@
 
     </UserControl.InputBindings>
 
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+            </Grid.ColumnDefinitions>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="22"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="22"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="22"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="Auto"/>
+            <TextBlock Grid.Row="0" Grid.Column="1">Select the Project</TextBlock>
+            <Image     Grid.Row="0" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                ToolTip="Select the Project for the new Backlog Items to be created."/>
+            <ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="cboProjects"/>
 
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="10"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="5" />
-        </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="4" Grid.Column="1">Select the Iteration Path</TextBlock>
+            <Image     Grid.Row="4" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png"
+                ToolTip="Select the Iteration Path for the new Backlog Items to be created."/>
+            <ComboBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="cboIterationPaths" IsEnabled="false"/>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" FontSize="14" FontWeight="Bold">Select the Project</TextBlock>
-        <Image     Grid.Row="0" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" Width="20" 
-            ToolTip="Select the Project for the new Backlog Items to be created."/>
-        <ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="cboProjects"/>
+            <TextBlock Grid.Row="8" Grid.Column="1">Select the Initial Level</TextBlock>
+            <Image     Grid.Row="8" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                ToolTip="Starting point for creating new Backlog Items."/>
+            <ComboBox Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3" x:Name="cboInitialLevel" IsEnabled="false"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" FontSize="14" FontWeight="Bold">Select the Iteration Path</TextBlock>
-        <Image     Grid.Row="4" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" Width="20" 
-            ToolTip="Select the Iteration Path for the new Backlog Items to be created."/>
-        <ComboBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="cboIterationPaths" IsEnabled="false"/>
+            <GroupBox Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="3" Header="Start From" x:Name="gbStartFrom" IsEnabled="false" FontSize="14" FontWeight="Bold">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                    </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="8" Grid.Column="1" VerticalAlignment="Bottom" FontSize="14" FontWeight="Bold">Select the Initial Level</TextBlock>
-        <Image     Grid.Row="8" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" Width="20" 
-            ToolTip="Starting point for creating new Backlog Items."/>
-        <ComboBox Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3" x:Name="cboInitialLevel" IsEnabled="false"/>
+                    <Image Grid.Row="1" Grid.Column="1" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                        ToolTip="If you choose to start from a new Work Item, it will be created from scratch."/>
+                    <RadioButton Grid.Row="1" Grid.Column="3" x:Name="optNewWorkItem" IsChecked="true" Checked="optNewWorkItem_Checked">New Work Item</RadioButton>
 
-        <GroupBox Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="3" Header="Start From" x:Name="gbStartFrom" IsEnabled="false" FontSize="14" FontWeight="Bold">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="10"/>
-                </Grid.RowDefinitions>
+                    <Image Grid.Row="3" Grid.Column="1" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                        ToolTip="If you choose to start from an existing Work Item, it will be used to create its child item(s)."/>
+                    <RadioButton Grid.Row="3" Grid.Column="3" x:Name="optExistingWorkItem" Checked="optExistingWorkItem_Checked">Existing Parent Work Item</RadioButton>
+
+                    <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" x:Name="grdParentWorkItem" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="22"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" FontSize="14" FontWeight="Bold">Select the Parent Work Item</TextBlock>
+                        <ComboBox Grid.Row="2" x:Name="cboParentWorkItem" FontSize="12" FontWeight="Normal" />
+                    </Grid>
+                </Grid>
+            </GroupBox>
+
+            <TextBlock Grid.Row="14" Grid.Column="1">Give Instructions</TextBlock>
+            <Image     Grid.Row="14" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                ToolTip="Provide detailed instructions for the AI to create the new backlog items. You can describe the project, user stories, relevant information, and any specific requirements for the backlog items."/>
+            <TextBox 
+                Grid.Row="16" 
+                Grid.Column="1" 
+                Grid.ColumnSpan="3" 
+                MinHeight="150"
+                x:Name="txtInstructions" 
+                AcceptsReturn="True" 
+                VerticalScrollBarVisibility="Auto" 
+                TextWrapping="Wrap" />
+
+            <CheckBox 
+                Grid.Row="18" 
+                Grid.Column="1" 
+                x:Name="chkGenerateChildren" 
+                VerticalAlignment="Center" 
+                FontSize="14" 
+                FontWeight="Bold"
+                Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
+                Generate Children
+            </CheckBox>
+            <Image Grid.Row="18" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                ToolTip="Check this box if you want the AI to create child work items for each parent work item, such as tasks for user stories."/>
+
+            <StackPanel Grid.Row="20" Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed" x:Name="spEstimateProjectHours">
+                <TextBlock Margin="0,0,10,0">Estimate Project Hours</TextBlock>
+                <TextBox x:Name="txtEstimateProjectHours" Width="30" Text="0" PreviewTextInput="txtEstimateProjectHours_PreviewTextInput"/>
+            </StackPanel>
+            <Image Grid.Row="20" Grid.Column="3" Visibility="Collapsed" x:Name="imgEstimateProjectHours" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                ToolTip="Enter the estimated number of hours for the project (user story). This information will be used by the AI to distribute the estimated hours among the created tasks."/>
+
+            <Separator Grid.Row="22" Grid.Column="1" Grid.ColumnSpan="3" Background="#FF007ACC" />
+
+            <Grid Grid.Row="24" Grid.Column="1" Grid.ColumnSpan="3">                
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="70" />
                 </Grid.ColumnDefinitions>
-
-                <Image Grid.Row="1" Grid.Column="1" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" Width="20" 
-                    ToolTip="If you choose to start from a new Work Item, it will be created from scratch."/>
-                <RadioButton 
-                    Grid.Row="1" 
-                    Grid.Column="3" 
-                    x:Name="optNewWorkItem" 
-                    IsChecked="true" 
-                    VerticalAlignment="Center" 
-                    FontSize="14" 
-                    FontWeight="Bold"
-                    Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
-                    Checked="optNewWorkItem_Checked">
-                    New Work Item
-                </RadioButton>
-
-                <Image Grid.Row="3" Grid.Column="1" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" Width="20" 
-                    ToolTip="If you choose to start from an existing Work Item, it will be used to create its child item(s)."/>
-                <RadioButton 
-                    Grid.Row="3" 
-                    Grid.Column="3" 
-                    x:Name="optExistingWorkItem" 
-                    VerticalAlignment="Center" 
-                    FontSize="14" 
-                    FontWeight="Bold"
-                    Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
-                    Checked="optExistingWorkItem_Checked">
-                    Existing Parent Work Item
-                </RadioButton>
-
-                <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" x:Name="grdParentWorkItem" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="22"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="22"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" FontSize="14" FontWeight="Bold">Select the Parent Work Item</TextBlock>
-                    <ComboBox Grid.Row="2" x:Name="cboParentWorkItem" FontSize="12" FontWeight="Normal" />
-                </Grid>
-            </Grid>
-        </GroupBox>
-
-        <!--
-        <ProgressBar 
-            Grid.Row="1" 
-            Grid.Column="1" 
-            x:Name="grdProgress" 
-            IsIndeterminate = "true"
-            Visibility="Collapsed"/>
-        <Button 
-            Grid.Row="1" 
-            Grid.Column="3" 
-            Width="50px"
-            x:Name="btnGenerate" 
-            ToolTip="Start generating the Backlog items"             
-            Click="btnGenerate_Click" >
-            <TextBlock FontWeight="Bold" FontSize="14">Generate</TextBlock>
-        </Button>-->
-    </Grid>
+                <ProgressBar Grid.Column="0" x:Name="grdProgress" IsIndeterminate = "true" Visibility="Collapsed"/>
+                <TextBlock   Grid.Column="0" x:Name="txtProgress" Text="Creating Backlog Items..." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Visibility="Collapsed"/>
+                <Button Grid.Column="2" x:Name="btnStop" ToolTip="Stop generating the Backlog items" Click="btnStop_Click" IsEnabled="false" >
+                    <TextBlock>Stop</TextBlock>
+                </Button>
+                <Button Grid.Column="4" x:Name="btnGenerate" ToolTip="Start generating the Backlog items" Click="btnGenerate_Click" IsEnabled="false">
+                    <TextBlock>Generate</TextBlock>
+                </Button>
+            </Grid>                
+            
+        </Grid>
+    </ScrollViewer>
 </UserControl>

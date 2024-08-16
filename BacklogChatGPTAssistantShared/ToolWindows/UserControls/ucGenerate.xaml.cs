@@ -4,7 +4,9 @@ using JeffPires.BacklogChatGPTAssistantShared.Models;
 using JeffPires.BacklogChatGPTAssistantShared.Utils;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
@@ -80,6 +82,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             cboInitialLevel.IsEnabled = true;
             gbStartFrom.IsEnabled = true;
             optNewWorkItem.IsChecked = true;
+            btnGenerate.IsEnabled = true;
         }
 
         private void CboInitialLevel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -89,7 +92,20 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 return;
             }
 
-            LoadParentWorkItems();
+            WorkItemType initialLevelSelected = EnumHelper.GetEnumFromStringValue<WorkItemType>(cboInitialLevel.SelectedValue.ToString());
+
+            if (initialLevelSelected == WorkItemType.ProductBacklogItem || initialLevelSelected == WorkItemType.Task)
+            {
+                spEstimateProjectHours.Visibility = Visibility.Visible;
+                imgEstimateProjectHours.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                spEstimateProjectHours.Visibility = Visibility.Collapsed;
+                imgEstimateProjectHours.Visibility = Visibility.Collapsed;
+            }
+
+            LoadParentWorkItems();            
         }
 
         private void optNewWorkItem_Checked(object sender, RoutedEventArgs e)
@@ -107,13 +123,28 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             grdParentWorkItem.Visibility = Visibility.Visible;
         }
 
+        private void txtEstimateProjectHours_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
 
         private void btnGenerate_Click(object sender, RoutedEventArgs e)
         {
-            //grdProgress.Visibility = Visibility.Visible;
-            //btnGenerate.IsEnabled = false;
+            btnGenerate.IsEnabled = false;
+            btnStop.IsEnabled = true;
 
+            grdProgress.Visibility = Visibility.Visible;
+            txtProgress.Visibility = Visibility.Visible;
+        }
 
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            btnGenerate.IsEnabled = true;
+            btnStop.IsEnabled = false;
+
+            grdProgress.Visibility = Visibility.Collapsed;
+            txtProgress.Visibility = Visibility.Collapsed;
         }
 
         #endregion Event Handlers
