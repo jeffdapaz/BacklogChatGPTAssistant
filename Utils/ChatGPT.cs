@@ -262,17 +262,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
     /// </summary>
     public enum ModelLanguageEnum
     {
-        [EnumStringValue("gpt-3.5-turbo")]
-        GPT_3_5_Turbo,
-        [EnumStringValue("gpt-3.5-turbo-1106")]
-        GPT_3_5_Turbo_1106,
-        [EnumStringValue("gpt-4")]
-        GPT_4,
-        [EnumStringValue("gpt-4-32k")]
-        GPT_4_32K,
-        [EnumStringValue("gpt-4-turbo")]
-        GPT_4_Turbo,
-        [EnumStringValue("gpt-4o")]
+        [EnumStringValue("gpt-4o-2024-08-06")]
         GPT_4o,
         [EnumStringValue("gpt-4o-mini")]
         GPT_4o_Mini
