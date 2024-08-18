@@ -273,7 +273,18 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             response = TextFormat.RemoveLanguageIdentifier(response);
 
-            List<WorkItemBase> backlogItemmGenerated = JsonSerializer.Deserialize<List<WorkItemBase>>(response);
+            List<WorkItemBase> backlogItemmGenerated;
+
+            try
+            {
+                backlogItemmGenerated = JsonSerializer.Deserialize<List<WorkItemBase>>(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+
+                MessageBox.Show("OpenAI invalid response.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+            }            
         }
 
         private WorkItemType GetSelectedInitialLevelWorkItemType()

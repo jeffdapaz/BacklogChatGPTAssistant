@@ -22,21 +22,23 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         private static readonly TimeSpan timeout = new(0, 0, 120);
 
         /// <summary>
-        /// Asynchronously gets a response from a chatbot.
+        /// Asynchronously gets a response from a chatbot based on the provided options, system messages, user input, stop sequences, and JSON schema.
         /// </summary>
         /// <param name="options">The options for the chatbot.</param>
         /// <param name="systemMessages">The system messages to send to the chatbot.</param>
         /// <param name="userInput">The user input to send to the chatbot.</param>
         /// <param name="stopSequences">The stop sequences to use for ending the conversation.</param>
+        /// <param name="jsonSchema">The JSON schema for the response format.</param>
+        /// <param name="jsonSchemaName">The name of the JSON schema.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        /// <returns>The response from the chatbot.</returns>
+        /// <returns>A task that represents the asynchronous operation, containing the response from the chatbot.</returns>
         public static async Task<string> GetResponseAsync(OptionPageGridGeneral options,
-                                                          List<string> systemMessages,
-                                                          string userInput,
-                                                          string[] stopSequences,
-                                                          JSchema jsonSchema,
-                                                          string jsonSchemaName,
-                                                          CancellationToken cancellationToken)
+                                                                  List<string> systemMessages,
+                                                                  string userInput,
+                                                                  string[] stopSequences,
+                                                                  JSchema jsonSchema,
+                                                                  string jsonSchemaName,
+                                                                  CancellationToken cancellationToken)
         {
             ConversationOverride chat = CreateConversationForCompletions(options, systemMessages, userInput, stopSequences, jsonSchema, jsonSchemaName);
 
@@ -55,11 +57,13 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         }
 
         /// <summary>
-        /// Creates a conversation with the specified options and system messages.
+        /// Creates a conversation for chatbot interactions based on the provided options, system messages, and JSON schema.
         /// </summary>
-        /// <param name="options">The options to use for the conversation.</param>
-        /// <param name="systemMessages">The system messages to append to the conversation.</param>
-        /// <returns>The created conversation.</returns>
+        /// <param name="options">The options for configuring the chatbot service.</param>
+        /// <param name="systemMessages">A list of system messages to be included in the conversation.</param>
+        /// <param name="jsonSchema">The JSON schema defining the expected response format.</param>
+        /// <param name="jsonSchemaName">The name of the JSON schema.</param>
+        /// <returns>A <see cref="ConversationOverride"/> instance configured for the chatbot interaction.</returns>
         private static ConversationOverride CreateConversation(OptionPageGridGeneral options, List<string> systemMessages, JSchema jsonSchema, string jsonSchemaName)
         {
             ConversationOverride chat;
@@ -97,14 +101,16 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         }
 
         /// <summary>
-        /// Creates a conversation for Completions with the given parameters.
+        /// Creates a conversation for completions with the specified options, system messages, user input, stop sequences, JSON schema, and schema name.
         /// </summary>
-        /// <param name="options">The options.</param>
-        /// <param name="systemMessages">The system messages.</param>
-        /// <param name="userInput">The user input.</param>
-        /// <param name="stopSequences">The stop sequences.</param>
+        /// <param name="options">The options for the conversation.</param>
+        /// <param name="systemMessages">The system messages to append to the conversation.</param>
+        /// <param name="userInput">The user input to send to the conversation.</param>
+        /// <param name="stopSequences">The stop sequences to use for ending the conversation.</param>
+        /// <param name="jsonSchema">The JSON schema for the response format.</param>
+        /// <param name="jsonSchemaName">The name of the JSON schema.</param>
         /// <returns>
-        /// The created conversation.
+        /// The created conversation override instance.
         /// </returns>
         private static ConversationOverride CreateConversationForCompletions(OptionPageGridGeneral options, List<string> systemMessages, string userInput, string[] stopSequences, JSchema jsonSchema, string jsonSchemaName)
         {
