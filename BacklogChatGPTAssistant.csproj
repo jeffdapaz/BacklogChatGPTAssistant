@@ -51,12 +51,40 @@
     <DeployExtension>True</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BacklogChatGPTAssistantPackage.cs" />
+    <Compile Include="Commands\TerminalWindowCommand.cs" />
+    <Compile Include="Models\Epic.cs" />
+    <Compile Include="Models\Feature.cs" />
+    <Compile Include="Models\ProductBacklogItem.cs" />
+    <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\Task.cs" />
+    <Compile Include="Models\WorkItemBase.cs" />
+    <Compile Include="OpenAIOverride\ChatRequestOverride.cs" />
+    <Compile Include="Options\OptionPageGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="source.extension.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
+    <Compile Include="ToolWindows\TerminalWindow\TerminalWindow.cs" />
+    <Compile Include="ToolWindows\TerminalWindow\TerminalWindowControl.xaml.cs">
+      <DependentUpon>TerminalWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\UserControls\ucGenerate.xaml.cs">
+      <DependentUpon>ucGenerate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\AzureDevops.cs" />
+    <Compile Include="Utils\Constants.cs" />
+    <Compile Include="OpenAIOverride\ConversationOverride.cs" />
+    <Compile Include="Utils\EnumHelper.cs" />
+    <Compile Include="Utils\Http\ChatGPTHttpClientFactory.cs" />
+    <Compile Include="Utils\Http\HttpClientCustom.cs" />
+    <Compile Include="Utils\Http\RequestCaptureHandler.cs" />
+    <Compile Include="Utils\ChatGPT.cs" />
+    <Compile Include="Utils\TextFormat.cs" />
     <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -94,9 +122,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Betalgo.OpenAI">
-      <Version>8.6.1</Version>
-    </PackageReference>
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
     <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.507" ExcludeAssets="Runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -117,6 +142,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json.Schema">
+      <Version>4.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="OpenAI">
+      <Version>1.8.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.ComponentModel.Annotations">
+      <Version>4.4.1</Version>
+    </PackageReference>
     <PackageReference Include="VsixLogger">
       <Version>1.1.45</Version>
     </PackageReference>
@@ -133,7 +167,17 @@
     <Resource Include="Resources\alert.png" />
     <Resource Include="Resources\information.png" />
   </ItemGroup>
-  <Import Project="BacklogChatGPTAssistantShared\BacklogChatGPTAssistantShared.projitems" Label="Shared" />
+  <ItemGroup>
+    <Page Include="ToolWindows\TerminalWindow\TerminalWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ToolWindows\UserControls\ucGenerate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

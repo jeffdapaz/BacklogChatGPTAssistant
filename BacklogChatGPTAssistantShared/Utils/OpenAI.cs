@@ -74,12 +74,12 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
             {
                 Messages = chatMessages,
                 Model = string.IsNullOrWhiteSpace(options.CustomModel) ? options.Model.GetStringValue() : options.CustomModel,
-                FrequencyPenalty = (float)options.FrequencyPenalty,
+                FrequencyPenalty = options.FrequencyPenalty.HasValue ? (float)options.FrequencyPenalty : null,
                 MaxTokens = options.MaxTokens,
-                PresencePenalty = (float)options.PresencePenalty,
+                PresencePenalty = options.PresencePenalty.HasValue ? (float)options.PresencePenalty : null,
                 StopAsList = options.StopSequences.Split(),
-                Temperature = (float)options.Temperature,
-                TopP = (float)options.TopP,
+                Temperature = options.Temperature.HasValue ? (float)options.Temperature : null,
+                TopP = options.TopP.HasValue ? (float)options.TopP : null,
                 User = Constants.EXTENSION_NAME,
                 ResponseFormat = isJsonResponseFormat ? new ResponseFormat() { Type = "json_object" } : null
             }, cancellationToken: cancellationToken);
@@ -128,7 +128,7 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Utils
                     ResourceName = options.AzureResourceName
                 };
 
-                azureService = new OpenAIService(azureAPIOptions, chatGPTHttpClient.CreateClient(BacklogChatGPTAssistant.Utils.Constants.EXTENSION_NAME));
+                azureService = new OpenAIService(azureAPIOptions, chatGPTHttpClient.CreateClient(Constants.EXTENSION_NAME));
             }
             else if (IsAzureOptionsParametersModified(options))
             {

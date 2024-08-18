@@ -1,16 +1,17 @@
-﻿using JeffPires.BacklogChatGPTAssistant.Options;
+﻿using JeffPires.BacklogChatGPTAssistant.Models;
+using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
-using JeffPires.BacklogChatGPTAssistantShared.Models;
-using JeffPires.BacklogChatGPTAssistantShared.Utils;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using static JeffPires.BacklogChatGPTAssistantShared.Models.WorkItemBase;
+using static JeffPires.BacklogChatGPTAssistant.Models.WorkItemBase;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
@@ -166,7 +167,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);                
+                Logger.Log(ex);
 
                 MessageBox.Show(ex.Message, Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
@@ -262,18 +263,17 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 systemMessages.Add(options.InstructionChildren);
             }
 
-            List<string> userMessages = [];
+            JSchemaGenerator generator = new();
 
-            if (!string.IsNullOrWhiteSpace(txtInstructions.Text))
-            {
-                userMessages.Add(txtInstructions.Text);
-            }
-
-            //systemMessages.Add($"JSON format response:{Environment.NewLine}{JsonSerializer.Serialize(new WorkItemBase())}");
+            JSchema schema = generator.Generate(typeof(List<WorkItemBase>));
 
             cancellationTokenSource = new CancellationTokenSource();
 
-            string response = await BacklogChatGPTAssistantShared.Utils.OpenAI.RequestAsync(options, systemMessages, userMessages, false, cancellationTokenSource.Token);
+            string response = await ChatGPT.GetResponseAsync(options, systemMessages, txtInstructions.Text, null, schema, nameof(WorkItemBase), cancellationTokenSource.Token);
+
+            response = TextFormat.RemoveLanguageIdentifier(response);
+
+            List<WorkItemBase> backlogItemmGenerated = JsonSerializer.Deserialize<List<WorkItemBase>>(response);
         }
 
         private WorkItemType GetSelectedInitialLevelWorkItemType()

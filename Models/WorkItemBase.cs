@@ -1,6 +1,6 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Utils;
 
-namespace JeffPires.BacklogChatGPTAssistantShared.Models
+namespace JeffPires.BacklogChatGPTAssistant.Models
 {
     /// <summary>
     /// Represents the base class for a work item.
@@ -53,13 +53,13 @@ namespace JeffPires.BacklogChatGPTAssistantShared.Models
         public enum WorkItemType
         {
             [EnumStringValue("Task")]
-            Task,
+            Task = 0,
             [EnumStringValue("Product Backlog Item")]
-            ProductBacklogItem,
+            ProductBacklogItem = 1,
             [EnumStringValue("Feature")]
-            Feature,
+            Feature = 2,
             [EnumStringValue("Epic")]
-            Epic
+            Epic = 3
         }
     }
 }

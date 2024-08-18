@@ -1,6 +1,6 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
-using JeffPires.BacklogChatGPTAssistantShared.Models;
+using JeffPires.BacklogChatGPTAssistant.Models;
 using Microsoft.TeamFoundation.Core.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Operation = Microsoft.VisualStudio.Services.WebApi.Patch.Operation;
-using WorkItemType = JeffPires.BacklogChatGPTAssistantShared.Models.WorkItemBase.WorkItemType;
+using WorkItemType = JeffPires.BacklogChatGPTAssistant.Models.WorkItemBase.WorkItemType;
 
-namespace JeffPires.BacklogChatGPTAssistantShared.Utils
+namespace JeffPires.BacklogChatGPTAssistant.Utils
 {
     /// <summary>
     /// Static class for interacting with Azure DevOps services and APIs.
