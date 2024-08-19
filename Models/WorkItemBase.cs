@@ -1,4 +1,5 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Utils;
+using System.Collections.Generic;
 
 namespace JeffPires.BacklogChatGPTAssistant.Models
 {
@@ -10,12 +11,12 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         /// <summary>
         /// Gets or sets the unique identifier.
         /// </summary>
-        public int Id { get; set; }
+        public double? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the parent work item. This property is nullable.
         /// </summary>
-        public int? ParentId { get; set; }
+        public double? ParentId { get; set; }
 
         /// <summary>
         /// Gets or sets the iteration path, which represents the hierarchical path of the iteration within a project.
@@ -45,7 +46,12 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         /// <summary>
         /// Gets or sets the remaining work.
         /// </summary>
-        public int? RemainingWork { get; set; }
+        public double? RemainingWork { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of child work items associated with the current work item.
+        /// </summary>
+        public List<WorkItemBase> Children { get; set; }
 
         /// <summary>
         /// Enumeration representing different types of work items.

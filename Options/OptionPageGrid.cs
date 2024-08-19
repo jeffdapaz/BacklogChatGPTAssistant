@@ -175,8 +175,8 @@ namespace JeffPires.BacklogChatGPTAssistant.Options
         [Category("Default Instructions")]
         [DisplayName("Parent Work Instruction")]
         [Description("Define an instruction to guide the creation of child items based on a specific Parent Item.")]
-        [DefaultValue("Create child work item(s) for the specified Parent Item. Ensure that each child item is appropriately linked to the Parent Item.")]
-        public string InstructionParentWork { get; set; } = "Create child work item(s) for the specified Parent Item. Ensure that each child item is appropriately linked to the Parent Item.";
+        [DefaultValue("Create child work item(s) for the specified Parent Item. Ensure that each child item is appropriately linked to the Parent Item. Do not return the Parent Item.")]
+        public string InstructionParentWork { get; set; } = "Create child work item(s) for the specified Parent Item. Ensure that each child item is appropriately linked to the Parent Item. Do not return the Parent Item.";
 
         [Category("Default Instructions")]
         [DisplayName("Children Instruction")]

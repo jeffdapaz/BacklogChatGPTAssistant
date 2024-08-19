@@ -1,6 +1,7 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Models;
 using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
 using System;
@@ -263,9 +264,11 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 systemMessages.Add(options.InstructionChildren);
             }
 
+            systemMessages.Add($"Ensure the response is in the following json schema:{Environment.NewLine}{CreateAWorkItemAsExampleAsJson()}.");
+
             JSchemaGenerator generator = new();
 
-            JSchema schema = generator.Generate(typeof(List<WorkItemBase>));
+            JSchema schema = generator.Generate(typeof(WorkItemBase));
 
             cancellationTokenSource = new CancellationTokenSource();
 
@@ -273,18 +276,27 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             response = TextFormat.RemoveLanguageIdentifier(response);
 
+            JToken token = JToken.Parse(response);
+
             List<WorkItemBase> backlogItemmGenerated;
 
             try
             {
-                backlogItemmGenerated = JsonSerializer.Deserialize<List<WorkItemBase>>(response);
+                if (token.Type == JTokenType.Object)
+                {
+                    backlogItemmGenerated = [JsonSerializer.Deserialize<WorkItemBase>(response)];
+                }
+                else
+                {
+                    backlogItemmGenerated = JsonSerializer.Deserialize<List<WorkItemBase>>(response);
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
 
                 MessageBox.Show("OpenAI invalid response.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
-            }            
+            }
         }
 
         private WorkItemType GetSelectedInitialLevelWorkItemType()
@@ -301,6 +313,29 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             grdProgress.Visibility = Visibility.Collapsed;
             txtProgress.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Creates an example work item and serializes it to JSON format.
+        /// </summary>
+        /// <returns>
+        /// A JSON string representation of the example work item.
+        /// </returns>
+        private string CreateAWorkItemAsExampleAsJson()
+        {
+            WorkItemBase workItem = new()
+            {
+                Id = 0,
+                ParentId = 0,
+                Type = WorkItemType.ProductBacklogItem,
+                Title = "Example Work Item",
+                Description = "This is an example work item.",
+                AcceptanceCriteria = "This is an example of an Acceptance Criteria",
+                RemainingWork = 0,
+                Children = []
+            };
+
+            return JsonSerializer.Serialize(workItem);
         }
 
         #endregion Methods  

@@ -33,12 +33,12 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation, containing the response from the chatbot.</returns>
         public static async Task<string> GetResponseAsync(OptionPageGridGeneral options,
-                                                                  List<string> systemMessages,
-                                                                  string userInput,
-                                                                  string[] stopSequences,
-                                                                  JSchema jsonSchema,
-                                                                  string jsonSchemaName,
-                                                                  CancellationToken cancellationToken)
+                                                          List<string> systemMessages,
+                                                          string userInput,
+                                                          string[] stopSequences,
+                                                          JSchema jsonSchema,
+                                                          string jsonSchemaName,
+                                                          CancellationToken cancellationToken)
         {
             ConversationOverride chat = CreateConversationForCompletions(options, systemMessages, userInput, stopSequences, jsonSchema, jsonSchemaName);
 
@@ -84,9 +84,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
             foreach (string systemMessage in systemMessages)
             {
                 chat.AppendSystemMessage(systemMessage);
-            }
-
-            chat.AppendSystemMessage($"Responde in json format using the the {jsonSchemaName} schema.");
+            }            
 
             chat.AutoTruncateOnContextLengthExceeded = true;
             chat.RequestParameters.Model = string.IsNullOrWhiteSpace(options.CustomModel) ? options.Model.GetStringValue() : options.CustomModel;
