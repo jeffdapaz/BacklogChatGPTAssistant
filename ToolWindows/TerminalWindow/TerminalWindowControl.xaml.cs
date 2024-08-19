@@ -1,9 +1,9 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Models;
 using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
-using JeffPires.BacklogChatGPTAssistant.Utils;
 using Microsoft.VisualStudio.Shell;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using UserControl = System.Windows.Controls.UserControl;
@@ -86,7 +86,17 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
         private void GenerateUserControl_WorkItemsGenerated(GenerateResult result)
         {
-            throw new NotImplementedException();
+            var generateUserControl = grdControls.Children.OfType<ucGenerate>().FirstOrDefault();
+
+            grdControls.Children.Remove(generateUserControl);
+
+            ucBacklogItems backlogItemsUserControl = new(result);
+
+            Grid.SetRow(backlogItemsUserControl, 1);
+            Grid.SetColumn(backlogItemsUserControl, 1);
+            Grid.SetColumnSpan(backlogItemsUserControl, 3);
+
+            grdControls.Children.Add(backlogItemsUserControl);
         }
 
         #endregion Event Handlers

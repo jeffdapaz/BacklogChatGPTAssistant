@@ -70,6 +70,9 @@
     <Compile Include="ToolWindows\TerminalWindow\TerminalWindowControl.xaml.cs">
       <DependentUpon>TerminalWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ToolWindows\UserControls\ucBacklogItems.xaml.cs">
+      <DependentUpon>ucBacklogItems.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ToolWindows\UserControls\ucGenerate.xaml.cs">
       <DependentUpon>ucGenerate.xaml</DependentUpon>
     </Compile>
@@ -166,6 +169,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="ToolWindows\TerminalWindow\TerminalWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ToolWindows\UserControls\ucBacklogItems.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
