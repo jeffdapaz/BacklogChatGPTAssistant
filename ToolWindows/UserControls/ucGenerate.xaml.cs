@@ -11,20 +11,25 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using static JeffPires.BacklogChatGPTAssistant.Models.WorkItemBase;
+using static JeffPires.BacklogChatGPTAssistant.Models.WorkItem;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 {
     /// <summary>
-    /// Represents a user control for command operations in the application and progress bar.
+    /// User control responsible to generate the Backlog Items
     /// </summary>
-    public partial class ucCommands : UserControl
+    public partial class ucGenerate : UserControl
     {
         #region Events
 
-        public event EventHandler onBtnGenerate_Clicked;
+        /// <summary>
+        /// Represents a delegate that is called when work items are generated.
+        /// </summary>
+        /// <param name="result">The result of the generated work items.</param>
+        public delegate void WorkItemsGeneratedDelegate(GenerateResult result);
+        public event WorkItemsGeneratedDelegate WorkItemsGenerated;
 
         #endregion Events
 
@@ -38,7 +43,12 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
         #region Constructors
 
-        public ucCommands(OptionPageGridGeneral options)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ucGenerate"/> class.
+        /// Sets up the UI components and event handlers for project and iteration selection.
+        /// </summary>
+        /// <param name="options">The options for the general settings of the command user control.</param>
+        public ucGenerate(OptionPageGridGeneral options)
         {
             this.InitializeComponent();
 
@@ -53,7 +63,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             cboInitialLevel.ItemsSource = workItemTypes.Select(wi => wi.GetStringValue()).ToList();
 
             cboProjects.ItemsSource = AzureDevops.ListProjects();
-            cboProjects.DisplayMemberPath = nameof(Project.Name);
+            cboProjects.DisplayMemberPath = nameof(AzureDevopsProject.Name);
 
             controlStarted = true;
         }
@@ -62,11 +72,16 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
         #region Event Handlers
 
+        /// <summary>
+        /// Handles the selection change event for the project combo box.
+        /// Asynchronously retrieves and populates the iteration paths based on the selected project.
+        /// If an error occurs during the retrieval, it logs the exception and displays a warning message.
+        /// </summary>
         private async void cboProjects_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             try
             {
-                cboIterationPaths.ItemsSource = await AzureDevops.ListInterationPathsAsync(((Project)cboProjects.SelectedItem).Name);
+                cboIterationPaths.ItemsSource = await AzureDevops.ListInterationPathsAsync(((AzureDevopsProject)cboProjects.SelectedItem).Name);
                 cboIterationPaths.IsEnabled = true;
             }
             catch (Exception ex)
@@ -77,6 +92,11 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             }
         }
 
+        /// <summary>
+        /// Handles the selection change event for the iteration paths combo box.
+        /// If the control has started, it loads the parent work items and enables
+        /// related UI elements for further interaction.
+        /// </summary>
         private void cboIterationPaths_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (!controlStarted)
@@ -92,6 +112,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             btnGenerate.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Handles the selection change event for the initial level combo box.
+        /// Updates the visibility of UI elements based on the selected work item type.
+        /// </summary>
         private void cboInitialLevel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (!controlStarted)
@@ -133,6 +157,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             LoadParentWorkItems();
         }
 
+        /// <summary>
+        /// Handles the Checked event for the optNewWorkItem control.
+        /// Collapses the parent work item grid if the control has started.
+        /// </summary>
         private void optNewWorkItem_Checked(object sender, RoutedEventArgs e)
         {
             if (!controlStarted)
@@ -143,17 +171,31 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             grdParentWorkItem.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// Handles the Checked event for the optExistingWorkItem control.
+        /// Sets the visibility of the grdParentWorkItem to Visible.
+        /// </summary>
         private void optExistingWorkItem_Checked(object sender, RoutedEventArgs e)
         {
             grdParentWorkItem.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Handles the PreviewTextInput event for the txtEstimateProjectHours control,
+        /// restricting input to numeric characters only.
+        /// </summary>
         private void txtEstimateProjectHours_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
+        /// <summary>
+        /// Handles the click event for the generate button. 
+        /// Disables the generate button and enables the stop button while showing progress indicators. 
+        /// Asynchronously creates backlog items and invokes the WorkItemsGenerated event if any items are generated. 
+        /// Catches and logs exceptions, displaying a warning message to the user, and resets the page state in the end.
+        /// </summary>
         private async void btnGenerate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -164,7 +206,12 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 grdProgress.Visibility = Visibility.Visible;
                 txtProgress.Visibility = Visibility.Visible;
 
-                await CreateBacklogItemsAsync();
+                GenerateResult result = await CreateBacklogItemsAsync();
+
+                if (result.GeneratedWorkItems.Any())
+                {
+                    WorkItemsGenerated?.Invoke(result);
+                }
             }
             catch (Exception ex)
             {
@@ -178,6 +225,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             }
         }
 
+        /// <summary>
+        /// Event handler for the Stop button click event. 
+        /// Resets the page to its initial state.
+        /// </summary>
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             ResetPage();
@@ -187,6 +238,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
         #region Methods
 
+        /// <summary>
+        /// Asynchronously loads parent work items based on the selected iteration path and work item type.
+        /// It updates the combo box with the retrieved work items and handles any exceptions that may occur.
+        /// </summary>
         private async System.Threading.Tasks.Task LoadParentWorkItems()
         {
             try
@@ -217,9 +272,9 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                     return;
                 }
 
-                cboParentWorkItem.ItemsSource = await AzureDevops.ListWorkItemsAsync(((Project)cboProjects.SelectedItem).Name, cboIterationPaths.SelectedValue.ToString(), selectedInitialLevel);
+                cboParentWorkItem.ItemsSource = await AzureDevops.ListWorkItemsAsync(((AzureDevopsProject)cboProjects.SelectedItem).Name, cboIterationPaths.SelectedValue.ToString(), selectedInitialLevel);
 
-                cboParentWorkItem.DisplayMemberPath = nameof(WorkItemBase.Title);
+                cboParentWorkItem.DisplayMemberPath = nameof(WorkItem.Title);
                 cboParentWorkItem.SelectedIndex = 0;
             }
             catch (Exception ex)
@@ -230,8 +285,25 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             }
         }
 
-        private async System.Threading.Tasks.Task CreateBacklogItemsAsync()
+        /// <summary>
+        /// Asynchronously creates backlog items based on user selections and options, 
+        /// generating a response from an AI service and processing the result into a 
+        /// structured format.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing a 
+        /// <see cref="GenerateResult"/> object with the selected project, iteration path, 
+        /// and generated work items.
+        /// </returns>
+        private async System.Threading.Tasks.Task<GenerateResult> CreateBacklogItemsAsync()
         {
+            GenerateResult result = new()
+            {
+                SelectedProject = (AzureDevopsProject)cboProjects.SelectedItem,
+                SelectedIterationPath = cboIterationPaths.SelectedValue.ToString(),
+                GeneratedWorkItems = []
+            };
+
             List<string> systemMessages = [];
 
             if (!string.IsNullOrWhiteSpace(options.InstructionDefault))
@@ -248,7 +320,9 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             if (initialLevelSelected != WorkItemType.Epic && optExistingWorkItem.IsChecked.Value)
             {
-                systemMessages.Add($"{options.InstructionParentWork} Parent item:{Environment.NewLine}{JsonSerializer.Serialize(cboParentWorkItem.SelectedValue)}");
+                result.ExistentWorkItem = (WorkItem)cboParentWorkItem.SelectedValue;
+
+                systemMessages.Add($"{options.InstructionParentWork} Parent item:{Environment.NewLine}{JsonSerializer.Serialize(result.ExistentWorkItem)}");
             }
 
             if (!string.IsNullOrWhiteSpace(options.InstructionEstimatedHours) && int.TryParse(txtEstimateProjectHours.Text, out int estimateProjectHours))
@@ -268,27 +342,34 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             JSchemaGenerator generator = new();
 
-            JSchema schema = generator.Generate(typeof(WorkItemBase));
+            JSchema schema = generator.Generate(typeof(WorkItem));
 
             cancellationTokenSource = new CancellationTokenSource();
 
-            string response = await ChatGPT.GetResponseAsync(options, systemMessages, txtInstructions.Text, null, schema, nameof(WorkItemBase), cancellationTokenSource.Token);
+            string response = await ChatGPT.GetResponseAsync(options, systemMessages, txtInstructions.Text, null, schema, nameof(WorkItem), cancellationTokenSource.Token);
 
             response = TextFormat.RemoveLanguageIdentifier(response);
 
             JToken token = JToken.Parse(response);
 
-            List<WorkItemBase> backlogItemmGenerated;
-
             try
             {
                 if (token.Type == JTokenType.Object)
                 {
-                    backlogItemmGenerated = [JsonSerializer.Deserialize<WorkItemBase>(response)];
+                    WorkItem workItemGenerate = JsonSerializer.Deserialize<WorkItem>(response);
+
+                    if (result.ExistentWorkItem != null && result.ExistentWorkItem.Id == workItemGenerate.Id)
+                    {
+                        result.GeneratedWorkItems.AddRange(workItemGenerate.Children);
+                    }
+                    else
+                    {
+                        result.GeneratedWorkItems.Add(workItemGenerate);
+                    }
                 }
                 else
                 {
-                    backlogItemmGenerated = JsonSerializer.Deserialize<List<WorkItemBase>>(response);
+                    result.GeneratedWorkItems = JsonSerializer.Deserialize<List<WorkItem>>(response);
                 }
             }
             catch (Exception ex)
@@ -297,13 +378,26 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
                 MessageBox.Show("OpenAI invalid response.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+
+            return result;
         }
 
+        /// <summary>
+        /// Retrieves the selected initial level work item type from the combo box.
+        /// </summary>
+        /// <returns>
+        /// The corresponding WorkItemType based on the selected value from the combo box.
+        /// </returns>
         private WorkItemType GetSelectedInitialLevelWorkItemType()
         {
             return EnumHelper.GetEnumFromStringValue<WorkItemType>(cboInitialLevel.SelectedValue.ToString()); ;
         }
 
+        /// <summary>
+        /// Resets the page by canceling any ongoing operations, 
+        /// enabling the generate button, disabling the stop button, 
+        /// and hiding the progress indicators.
+        /// </summary>
         private void ResetPage()
         {
             cancellationTokenSource.Cancel();
@@ -323,7 +417,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         /// </returns>
         private string CreateAWorkItemAsExampleAsJson()
         {
-            WorkItemBase workItem = new()
+            WorkItem workItem = new()
             {
                 Id = 0,
                 ParentId = 0,

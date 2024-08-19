@@ -1,4 +1,5 @@
-﻿using JeffPires.BacklogChatGPTAssistant.Options;
+﻿using JeffPires.BacklogChatGPTAssistant.Models;
+using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
 using JeffPires.BacklogChatGPTAssistant.Utils;
 using Microsoft.VisualStudio.Shell;
@@ -63,13 +64,15 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
                 AzureDevops.Login(options);
 
-                ucCommands commands = new(options);
+                ucGenerate generateUserControl = new(options);
 
-                Grid.SetRow(commands, 1);
-                Grid.SetColumn(commands, 1);
-                Grid.SetColumnSpan(commands, 3);
+                generateUserControl.WorkItemsGenerated += GenerateUserControl_WorkItemsGenerated;
 
-                grdControls.Children.Add(commands);
+                Grid.SetRow(generateUserControl, 1);
+                Grid.SetColumn(generateUserControl, 1);
+                Grid.SetColumnSpan(generateUserControl, 3);
+
+                grdControls.Children.Add(generateUserControl);
 
                 controlStarted = true;
             }
@@ -79,6 +82,11 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
                 MessageBox.Show(ex.Message, Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+        }
+
+        private void GenerateUserControl_WorkItemsGenerated(GenerateResult result)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion Event Handlers

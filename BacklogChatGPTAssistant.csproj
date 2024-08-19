@@ -53,12 +53,9 @@
   <ItemGroup>
     <Compile Include="BacklogChatGPTAssistantPackage.cs" />
     <Compile Include="Commands\TerminalWindowCommand.cs" />
-    <Compile Include="Models\Epic.cs" />
-    <Compile Include="Models\Feature.cs" />
-    <Compile Include="Models\ProductBacklogItem.cs" />
-    <Compile Include="Models\Project.cs" />
-    <Compile Include="Models\Task.cs" />
-    <Compile Include="Models\WorkItemBase.cs" />
+    <Compile Include="Models\GenerateResult.cs" />
+    <Compile Include="Models\AzureDevopsProject.cs" />
+    <Compile Include="Models\WorkItem.cs" />
     <Compile Include="OpenAIOverride\ChatRequestOverride.cs" />
     <Compile Include="Options\OptionPageGrid.cs">
       <SubType>Component</SubType>

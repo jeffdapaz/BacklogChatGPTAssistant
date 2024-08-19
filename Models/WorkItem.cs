@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace JeffPires.BacklogChatGPTAssistant.Models
 {
     /// <summary>
-    /// Represents the base class for a work item.
+    /// Represents the class for a work item.
     /// </summary>
-    public class WorkItemBase
+    public class WorkItem
     {
         /// <summary>
         /// Gets or sets the unique identifier.
@@ -17,11 +17,6 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         /// Gets or sets the ID of the parent work item. This property is nullable.
         /// </summary>
         public double? ParentId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the iteration path, which represents the hierarchical path of the iteration within a project.
-        /// </summary>
-        public string IterationPath { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the work item.
@@ -51,7 +46,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         /// <summary>
         /// Gets or sets the collection of child work items associated with the current work item.
         /// </summary>
-        public List<WorkItemBase> Children { get; set; }
+        public List<WorkItem> Children { get; set; }
 
         /// <summary>
         /// Enumeration representing different types of work items.

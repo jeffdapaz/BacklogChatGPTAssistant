@@ -5,7 +5,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
     /// <summary>
     /// Represents a Azure Devops project.
     /// </summary>
-    public class Project
+    public class AzureDevopsProject
     {
         /// <summary>
         /// Gets or sets the unique identifier.

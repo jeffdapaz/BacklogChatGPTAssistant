@@ -1,6 +1,5 @@
-﻿using JeffPires.BacklogChatGPTAssistant.Options;
-using JeffPires.BacklogChatGPTAssistant.Utils;
-using JeffPires.BacklogChatGPTAssistant.Models;
+﻿using JeffPires.BacklogChatGPTAssistant.Models;
+using JeffPires.BacklogChatGPTAssistant.Options;
 using Microsoft.TeamFoundation.Core.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -13,7 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Operation = Microsoft.VisualStudio.Services.WebApi.Patch.Operation;
-using WorkItemType = JeffPires.BacklogChatGPTAssistant.Models.WorkItemBase.WorkItemType;
+using WorkItem = JeffPires.BacklogChatGPTAssistant.Models.WorkItem;
+using WorkItemType = JeffPires.BacklogChatGPTAssistant.Models.WorkItem.WorkItemType;
 
 namespace JeffPires.BacklogChatGPTAssistant.Utils
 {
@@ -61,17 +61,17 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// <returns>
         /// Contains an IEnumerable of TeamProjectReference objects.
         /// </returns>
-        public static List<Project> ListProjects()
+        public static List<AzureDevopsProject> ListProjects()
         {
             ProjectHttpClient projectClient = vssConnection.GetClient<ProjectHttpClient>();
 
             IEnumerable<TeamProjectReference> projects = projectClient.GetProjects().Result;
 
-            List<Project> result = [];
+            List<AzureDevopsProject> result = [];
 
             foreach (TeamProjectReference projectReference in projects)
             {
-                Project project = new()
+                AzureDevopsProject project = new()
                 {
                     Id = projectReference.Id,
                     Name = projectReference.Name
@@ -113,9 +113,9 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// <returns>
         /// Result contains a list of work items matching the specified criteria.
         /// </returns>
-        public static async Task<List<WorkItemBase>> ListWorkItemsAsync(string projectName, string iterationPath, WorkItemType workItemType)
+        public static async Task<List<WorkItem>> ListWorkItemsAsync(string projectName, string iterationPath, WorkItemType workItemType)
         {
-            List<WorkItemBase> result = [];
+            List<WorkItem> result = [];
 
             string wiqlQuery = $@"
                SELECT [System.Id], [System.Title], [System.State]
@@ -138,11 +138,11 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
 
             int[] ids = queryResult.WorkItems.Select(wi => wi.Id).ToArray();
 
-            List<WorkItem> workItems = await workItemTrackingClient.GetWorkItemsAsync(ids);
+            List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem> workItems = await workItemTrackingClient.GetWorkItemsAsync(ids);
 
-            foreach (WorkItem workItem in workItems)
+            foreach (Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem workItem in workItems)
             {
-                WorkItemBase workItemResult = new() { Id = workItem.Id.Value, Type = workItemType };
+                WorkItem workItemResult = new() { Id = workItem.Id.Value, Type = workItemType };
 
                 if (workItem.Fields.TryGetValue("System.Title", out string title))
                 {
@@ -166,14 +166,13 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         }
 
         /// <summary>
-        /// Creates a new work item in the specified project with the provided details.
+        /// Saves a work item to an Azure DevOps project with specified details.
         /// </summary>
-        /// <param name="project">The project in which the work item will be created.</param>
-        /// <param name="workItem">The work item details to be created.</param>
-        /// <returns>
-        /// The ID of the newly created work item.
-        /// </returns>
-        public static async Task<int> CreateWorkItemAsync(Project project, WorkItemBase workItem)
+        /// <param name="project">The Azure DevOps project where the work item will be saved.</param>
+        /// <param name="workItem">The work item containing details such as title, description, and type.</param>
+        /// <param name="iterationPath">The iteration path to associate with the work item.</param>
+        /// <returns>Containing the ID of the newly created work item.</returns>
+        public static async Task<int> SaveWorkItemAsync(AzureDevopsProject project, WorkItem workItem, string iterationPath)
         {
             JsonPatchDocument patchDocument = new();
 
@@ -182,7 +181,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                 {
                     Operation = Operation.Add,
                     Path = "/fields/System.IterationPath",
-                    Value = workItem.IterationPath
+                    Value = iterationPath
                 }
              );
 
@@ -245,7 +244,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
 
             WorkItemTrackingHttpClient workItemTrackingClient = vssConnection.GetClient<WorkItemTrackingHttpClient>();
 
-            WorkItem newWorkItem = await workItemTrackingClient.CreateWorkItemAsync(patchDocument, project.Id, workItem.Type.GetStringValue());
+            Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem newWorkItem = await workItemTrackingClient.CreateWorkItemAsync(patchDocument, project.Id, workItem.Type.GetStringValue());
 
             return newWorkItem.Id.Value;
         }
