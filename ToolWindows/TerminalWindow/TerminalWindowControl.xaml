@@ -10,16 +10,20 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
     <UserControl.Resources>
-
+        <Storyboard x:Key="FadeOutStoryboard">
+            <DoubleAnimation 
+                Storyboard.TargetName="grdGenerate" 
+                Storyboard.TargetProperty="Opacity" 
+                From="1" To="0" Duration="0:0:0.5"
+                Completed="FadeOutStoryboard_Completed"/>
+        </Storyboard>
+        <Storyboard x:Key="FadeInStoryboard">
+            <DoubleAnimation 
+                Storyboard.TargetName="grdBacklogItems" 
+                Storyboard.TargetProperty="Opacity" 
+                From="0" To="1" Duration="0:0:0.5"/>
+        </Storyboard>
     </UserControl.Resources>
-
-    <UserControl.CommandBindings>
-
-    </UserControl.CommandBindings>
-
-    <UserControl.InputBindings>
-
-    </UserControl.InputBindings>
 
     <Grid x:Name="grdControls">
         <Grid.RowDefinitions>

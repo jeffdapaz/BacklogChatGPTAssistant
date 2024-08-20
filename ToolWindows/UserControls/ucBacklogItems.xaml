@@ -12,11 +12,34 @@
              Name="MyToolWindow">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid>
-            <TreeView Name="trvWorkItems">
+        <Grid x:Name="grdBacklogItems">
+            <TreeView 
+                Name="trvWorkItems"
+                Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type models:WorkItem}" ItemsSource="{Binding Children}">
-                        <TextBlock Text="{Binding Title}" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox 
+                                Text="{Binding Title}" 
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>     
+                        </Grid>                        
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>

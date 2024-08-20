@@ -342,7 +342,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             JSchemaGenerator generator = new();
 
-            JSchema schema = generator.Generate(typeof(WorkItem));
+            JSchema schema = generator.Generate(typeof(List<WorkItem>));
 
             cancellationTokenSource = new CancellationTokenSource();
 
@@ -350,10 +350,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             response = TextFormat.RemoveLanguageIdentifier(response);
 
-            JToken token = JToken.Parse(response);
-
             try
             {
+                JToken token = JToken.Parse(response);
+
                 if (token.Type == JTokenType.Object)
                 {
                     WorkItem workItemGenerate = JsonSerializer.Deserialize<WorkItem>(response);
@@ -371,12 +371,14 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 {
                     result.GeneratedWorkItems = JsonSerializer.Deserialize<List<WorkItem>>(response);
                 }
+
+                SetWorkItemsType(result);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
 
-                MessageBox.Show("OpenAI invalid response.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("OpenAI invalid response. Please try again.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return result;
@@ -417,19 +419,62 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         /// </returns>
         private string CreateAWorkItemAsExampleAsJson()
         {
-            WorkItem workItem = new()
+            List<WorkItem> workItems =
+            [
+                new()
+                {
+                    Id = 0,
+                    ParentId = 0,
+                    Type = WorkItemType.ProductBacklogItem,
+                    Title = "Example Work Item",
+                    Description = "This is an example work item.",
+                    AcceptanceCriteria = "This is an example of an Acceptance Criteria",
+                    RemainingWork = 0,
+                    Children = []
+                }
+            ];
+
+            return JsonSerializer.Serialize(workItems);
+        }
+
+        /// <summary>
+        /// Sets the type of work items for a given set of generated work items, 
+        /// assigning a selected initial level type to each parent and its children.
+        /// </summary>
+        /// <param name="workItems">The generated work items to set types for.</param>
+        private void SetWorkItemsType(GenerateResult workItems)
+        {
+            WorkItemType selectedInitialLevel = GetSelectedInitialLevelWorkItemType();
+
+            foreach (WorkItem parentWorkItem in workItems.GeneratedWorkItems)
             {
-                Id = 0,
-                ParentId = 0,
-                Type = WorkItemType.ProductBacklogItem,
-                Title = "Example Work Item",
-                Description = "This is an example work item.",
-                AcceptanceCriteria = "This is an example of an Acceptance Criteria",
-                RemainingWork = 0,
-                Children = []
+                parentWorkItem.Type = selectedInitialLevel;
+
+                foreach (WorkItem childWorkItem in parentWorkItem.Children)
+                {
+                    SetWorkItemType(childWorkItem, parentWorkItem.Type);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the work item type based on the parent work item type and recursively updates child work items.
+        /// </summary>
+        /// <param name="workItem">The work item to update.</param>
+        /// <param name="parentType">The type of the parent work item.</param>
+        private void SetWorkItemType(WorkItem workItem, WorkItemType parentType)
+        {
+            workItem.Type = parentType switch
+            {
+                WorkItemType.Epic => WorkItemType.Feature,
+                WorkItemType.Feature => WorkItemType.ProductBacklogItem,
+                _ => WorkItemType.Task
             };
 
-            return JsonSerializer.Serialize(workItem);
+            foreach (WorkItem childWorkItem in workItem.Children)
+            {
+                SetWorkItemType(childWorkItem, workItem.Type);
+            }
         }
 
         #endregion Methods  

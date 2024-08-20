@@ -5,7 +5,6 @@ using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Client;
 using Microsoft.VisualStudio.Services.Common;
-using Microsoft.VisualStudio.Services.WebApi;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using System;
 using System.Collections.Generic;
@@ -25,7 +24,8 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         #region Attributes
 
         private static OptionPageGridGeneral options;
-        private static VssConnection vssConnection;
+        private static WorkItemTrackingHttpClient workItemClient;
+        private static ProjectHttpClient projectClient;
 
         #endregion Attributes
 
@@ -43,16 +43,18 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
             {
                 VssBasicCredential credentials = new(string.Empty, options.AzureDevopsPAT);
 
-                vssConnection = new VssConnection(new Uri(options.AzureDevopsUrl), credentials);
+                workItemClient = new WorkItemTrackingHttpClient(new Uri(options.AzureDevopsUrl), credentials);
+
+                projectClient = new ProjectHttpClient(new Uri(options.AzureDevopsUrl), credentials);
             }
             else
             {
                 VssClientCredentials credentials = new(new WindowsCredential(false), new VssFederatedCredential(false), CredentialPromptType.PromptIfNeeded);
 
-                vssConnection = new VssConnection(new Uri(options.AzureDevopsUrl), credentials);
-            }
+                workItemClient = new WorkItemTrackingHttpClient(new Uri(options.AzureDevopsUrl), credentials);
 
-            vssConnection.ConnectAsync().SyncResult();
+                projectClient = new ProjectHttpClient(new Uri(options.AzureDevopsUrl), credentials);
+            }
         }
 
         /// <summary>
@@ -63,8 +65,6 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// </returns>
         public static List<AzureDevopsProject> ListProjects()
         {
-            ProjectHttpClient projectClient = vssConnection.GetClient<ProjectHttpClient>();
-
             IEnumerable<TeamProjectReference> projects = projectClient.GetProjects().Result;
 
             List<AzureDevopsProject> result = [];
@@ -92,10 +92,8 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// </returns>
         public static async Task<List<string>> ListInterationPathsAsync(string projectName)
         {
-            WorkItemTrackingHttpClient workItemTrackingClient = vssConnection.GetClient<WorkItemTrackingHttpClient>();
-
             //Obtain all the areas and iterations of the project
-            WorkItemClassificationNode classificationNodes = await workItemTrackingClient.GetClassificationNodeAsync(projectName, TreeStructureGroup.Iterations, depth: int.MaxValue);
+            WorkItemClassificationNode classificationNodes = await workItemClient.GetClassificationNodeAsync(projectName, TreeStructureGroup.Iterations, depth: int.MaxValue);
 
             List<string> iterationPaths = [];
 
@@ -125,11 +123,9 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                AND [System.WorkItemType] = '{workItemType.GetStringValue()}'
                ORDER BY [System.Id]";
 
-            WorkItemTrackingHttpClient workItemTrackingClient = vssConnection.GetClient<WorkItemTrackingHttpClient>();
-
             Wiql wiql = new() { Query = wiqlQuery };
 
-            WorkItemQueryResult queryResult = await workItemTrackingClient.QueryByWiqlAsync(wiql);
+            WorkItemQueryResult queryResult = await workItemClient.QueryByWiqlAsync(wiql);
 
             if (!queryResult.WorkItems.Any())
             {
@@ -138,7 +134,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
 
             int[] ids = queryResult.WorkItems.Select(wi => wi.Id).ToArray();
 
-            List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem> workItems = await workItemTrackingClient.GetWorkItemsAsync(ids);
+            List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem> workItems = await workItemClient.GetWorkItemsAsync(ids);
 
             foreach (Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem workItem in workItems)
             {
@@ -242,9 +238,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                 );
             }
 
-            WorkItemTrackingHttpClient workItemTrackingClient = vssConnection.GetClient<WorkItemTrackingHttpClient>();
-
-            Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem newWorkItem = await workItemTrackingClient.CreateWorkItemAsync(patchDocument, project.Id, workItem.Type.GetStringValue());
+            Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem newWorkItem = await workItemClient.CreateWorkItemAsync(patchDocument, project.Id, workItem.Type.GetStringValue());
 
             return newWorkItem.Id.Value;
         }

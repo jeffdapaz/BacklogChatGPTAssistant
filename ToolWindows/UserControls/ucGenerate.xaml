@@ -31,7 +31,7 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid>
+        <Grid x:Name="grdGenerate">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="10"/>
@@ -96,19 +96,19 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="10" />
                     </Grid.ColumnDefinitions>
-
-                    <Image Grid.Row="1" Grid.Column="1" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                    
+                    <RadioButton Grid.Row="1" Grid.Column="1" x:Name="optNewWorkItem" IsChecked="true" Checked="optNewWorkItem_Checked">New Work Item</RadioButton>
+                    <Image Grid.Row="1" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
                         ToolTip="If you choose to start from a new Work Item, it will be created from scratch."/>
-                    <RadioButton Grid.Row="1" Grid.Column="3" x:Name="optNewWorkItem" IsChecked="true" Checked="optNewWorkItem_Checked">New Work Item</RadioButton>
 
-                    <Image Grid.Row="3" Grid.Column="1" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
-                        ToolTip="If you choose to start from an existing Work Item, it will be used to create its child item(s)."/>
-                    <RadioButton Grid.Row="3" Grid.Column="3" x:Name="optExistingWorkItem" Checked="optExistingWorkItem_Checked">Existing Parent Work Item</RadioButton>
+                    <RadioButton Grid.Row="3" Grid.Column="1" x:Name="optExistingWorkItem" Checked="optExistingWorkItem_Checked">Existing Parent Work Item</RadioButton>
+                    <Image Grid.Row="3" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+                        ToolTip="If you choose to start from an existing Work Item, it will be used to create its child item(s)."/>                    
 
                     <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" x:Name="grdParentWorkItem" Visibility="Collapsed">
                         <Grid.RowDefinitions>
