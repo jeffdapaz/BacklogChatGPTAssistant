@@ -142,7 +142,8 @@
                 VerticalAlignment="Center" 
                 FontSize="14" 
                 FontWeight="Bold"
-                Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
+                Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+                Click="chkGenerateChildren_Click">
                 Generate Children
             </CheckBox>
             <Image Grid.Row="18" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 

@@ -56,6 +56,7 @@
     <Compile Include="Models\GenerateResult.cs" />
     <Compile Include="Models\AzureDevopsProject.cs" />
     <Compile Include="Models\WorkItem.cs" />
+    <Compile Include="Models\WorkItemResult.cs" />
     <Compile Include="OpenAIOverride\ChatRequestOverride.cs" />
     <Compile Include="Options\OptionPageGrid.cs">
       <SubType>Component</SubType>
@@ -164,6 +165,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\backlog.png" />
+    <Resource Include="Resources\epic.png" />
+    <Resource Include="Resources\feature.png" />
+    <Resource Include="Resources\task.png" />
     <Resource Include="Resources\alert.png" />
     <Resource Include="Resources\information.png" />
   </ItemGroup>

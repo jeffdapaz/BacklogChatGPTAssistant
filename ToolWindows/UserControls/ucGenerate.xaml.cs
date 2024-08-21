@@ -143,7 +143,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 chkGenerateChildren.Visibility = Visibility.Collapsed;
             }
 
-            if (initialLevelSelected == WorkItemType.ProductBacklogItem || initialLevelSelected == WorkItemType.Task)
+            if (chkGenerateChildren.IsChecked.Value || initialLevelSelected == WorkItemType.ProductBacklogItem || initialLevelSelected == WorkItemType.Task)
             {
                 spEstimateProjectHours.Visibility = Visibility.Visible;
                 imgEstimateProjectHours.Visibility = Visibility.Visible;
@@ -188,6 +188,15 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         {
             Regex regex = new("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        /// <summary>
+        /// Handles the click event for the checkbox to generate children work items.
+        /// Toggles the visibility of the project hours estimation panel based on the checkbox state.
+        /// </summary>
+        private void chkGenerateChildren_Click(object sender, RoutedEventArgs e)
+        {
+            spEstimateProjectHours.Visibility = chkGenerateChildren.IsChecked.Value ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>
@@ -325,12 +334,12 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 systemMessages.Add($"{options.InstructionParentWork} Parent item:{Environment.NewLine}{JsonSerializer.Serialize(result.ExistentWorkItem)}");
             }
 
-            if (!string.IsNullOrWhiteSpace(options.InstructionEstimatedHours) && int.TryParse(txtEstimateProjectHours.Text, out int estimateProjectHours))
+            if (spEstimateProjectHours.Visibility == Visibility.Visible &&
+                !string.IsNullOrWhiteSpace(options.InstructionEstimatedHours) &&
+                int.TryParse(txtEstimateProjectHours.Text, out int estimateProjectHours) &&
+                estimateProjectHours > 0)
             {
-                if (estimateProjectHours > 0)
-                {
-                    systemMessages.Add($"{options.InstructionEstimatedHours} {estimateProjectHours}");
-                }
+                systemMessages.Add($"{options.InstructionEstimatedHours} {estimateProjectHours}");
             }
 
             if (!string.IsNullOrWhiteSpace(options.InstructionChildren) && chkGenerateChildren.IsChecked.Value && initialLevelSelected != WorkItemType.Task)
