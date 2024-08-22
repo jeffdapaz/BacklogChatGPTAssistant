@@ -5,24 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:models="clr-namespace:JeffPires.BacklogChatGPTAssistant.Models"
+             xmlns:local="clr-namespace:JeffPires.BacklogChatGPTAssistant.ToolWindows"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Name="MyToolWindow"
-             SizeChanged="UserControl_SizeChanged">
-
-    <UserControl.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
-            <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
-        </Style>
-    </UserControl.Resources>
+             Name="MyToolWindow">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -32,58 +20,30 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="0" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="0" />
         </Grid.ColumnDefinitions>
 
-        <Button Name="btnExpandAll" Click="btnExpandAll_Click"  Grid.Row="1" Grid.Column="1" Width="100" ToolTip="Expand All">
-            <TextBlock FontWeight="Bold" FontSize="12">Expand All</TextBlock>
+        <Button Name="btnExpandAll" Click="btnExpandAll_Click" Grid.Row="1" Grid.Column="1" Width="100" ToolTip="Expand All">
+            <TextBlock FontWeight="Bold" FontSize="12" Foreground="Black">Expand All</TextBlock>
         </Button>
-        <Button Name="btnCollapseAll" Click="btnCollapseAll_Click"  Grid.Row="1" Grid.Column="3" Width="100" ToolTip="Collapse All" HorizontalAlignment="Left">
-            <TextBlock FontWeight="Bold" FontSize="12">Collapse All</TextBlock>
+        <Button Name="btnCollapseAll" Click="btnCollapseAll_Click" Grid.Row="1" Grid.Column="3" Width="100" ToolTip="Collapse All" HorizontalAlignment="Left">
+            <TextBlock FontWeight="Bold" FontSize="12" Foreground="Black">Collapse All</TextBlock>
         </Button>
 
-        <ScrollViewer Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="-15,0,0,0" x:Name="scrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <Grid x:Name="grdBacklogItems">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TreeView 
-                    Grid.Column="0"                 
-                    Name="trvWorkItems"
-                    BorderThickness="0"
-                    Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
-                    PreviewMouseWheel="trvWorkItems_PreviewMouseWheel">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type models:WorkItem}" ItemsSource="{Binding Children}">
-                            <Grid Margin="0,5,0,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="21"/>
-                                    <RowDefinition Height="10"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="10" />
-                                </Grid.ColumnDefinitions>
-                                <Grid Grid.Row="0" Grid.Column="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0" Source="{Binding IconSource}"/>
-                                    <TextBox Grid.Column="2" Text="{Binding Title}" Width="{Binding TextWidth}" FontSize="14" FontWeight="Bold"/>
-                                </Grid>
-                            </Grid>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
-            </Grid>
+        <ScrollViewer Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" x:Name="scrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl Name="workItemsList" ItemsSource="{Binding}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1" BorderBrush="#FF007ACC" Margin="0,0,15,20" CornerRadius="2">
+                            <local:ucWorkItem DataContext="{Binding}" Margin="5,0,0,0"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
-        
-    </Grid>    
+    </Grid>
 </UserControl>

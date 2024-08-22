@@ -71,6 +71,9 @@
     <Compile Include="ToolWindows\TerminalWindow\TerminalWindowControl.xaml.cs">
       <DependentUpon>TerminalWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ToolWindows\UserControls\ucWorkItem.xaml.cs">
+      <DependentUpon>ucWorkItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ToolWindows\UserControls\ucBacklogItems.xaml.cs">
       <DependentUpon>ucBacklogItems.xaml</DependentUpon>
     </Compile>
@@ -165,6 +168,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\refresh.png" />
     <Resource Include="Resources\backlog.png" />
     <Resource Include="Resources\epic.png" />
     <Resource Include="Resources\feature.png" />
@@ -174,6 +178,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="ToolWindows\TerminalWindow\TerminalWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ToolWindows\UserControls\ucWorkItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
