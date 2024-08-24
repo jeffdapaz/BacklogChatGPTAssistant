@@ -146,8 +146,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json.Schema">
-      <Version>4.0.1</Version>
+    <PackageReference Include="NJsonSchema">
+      <Version>11.0.2</Version>
     </PackageReference>
     <PackageReference Include="OpenAI">
       <Version>1.8.0</Version>
@@ -168,6 +168,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\add.png" />
+    <Resource Include="Resources\garbage.png" />
     <Resource Include="Resources\refresh.png" />
     <Resource Include="Resources\backlog.png" />
     <Resource Include="Resources\epic.png" />

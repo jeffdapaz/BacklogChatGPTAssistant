@@ -66,15 +66,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
                 AzureDevops.Login(options);
 
-                ucGenerate generateUserControl = new(options);
-
-                generateUserControl.WorkItemsGenerated += GenerateUserControl_WorkItemsGenerated;
-
-                Grid.SetRow(generateUserControl, 1);
-                Grid.SetColumn(generateUserControl, 1);
-                Grid.SetColumnSpan(generateUserControl, 3);
-
-                grdControls.Children.Add(generateUserControl);
+                InitializeWorkItemGeneratorControl();
 
                 controlStarted = true;
             }
@@ -113,7 +105,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             grdControls.Children.Remove(generateUserControl);
 
-            ucBacklogItems backlogItemsUserControl = new(generateResult);
+            ucBacklogItems backlogItemsUserControl = new(generateResult, options);
+
+            backlogItemsUserControl.Canceled += BacklogItemsUserControl_Canceled;
+
             Grid.SetRow(backlogItemsUserControl, 1);
             Grid.SetColumn(backlogItemsUserControl, 1);
             Grid.SetColumnSpan(backlogItemsUserControl, 3);
@@ -123,6 +118,19 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             Storyboard fadeInStoryboard = (Storyboard)FindResource("FadeInStoryboard");
 
             fadeInStoryboard.Begin(backlogItemsUserControl);
+        }
+
+        /// <summary>
+        /// Handles the cancellation of the backlog items user control, removing the backlog items control 
+        /// from the grid and reinitializing the work item generator control.
+        /// </summary>
+        private void BacklogItemsUserControl_Canceled()
+        {
+            ucBacklogItems backlogItemsControl = grdControls.Children.OfType<ucBacklogItems>().FirstOrDefault();
+
+            grdControls.Children.Remove(backlogItemsControl);
+
+            InitializeWorkItemGeneratorControl();
         }
 
         #endregion Event Handlers
@@ -138,6 +146,22 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         {
             this.options = options;
             this.package = package;
+        }
+
+        /// <summary>
+        /// Initializes the Work Item Generator control, sets up event handlers and adds the control to the grid layout.
+        /// </summary>
+        private void InitializeWorkItemGeneratorControl()
+        {
+            ucGenerate generateUserControl = new(options);
+
+            generateUserControl.WorkItemsGenerated += GenerateUserControl_WorkItemsGenerated;
+
+            Grid.SetRow(generateUserControl, 1);
+            Grid.SetColumn(generateUserControl, 1);
+            Grid.SetColumnSpan(generateUserControl, 3);
+
+            grdControls.Children.Add(generateUserControl);
         }
 
         #endregion Methods        

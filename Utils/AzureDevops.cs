@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Operation = Microsoft.VisualStudio.Services.WebApi.Patch.Operation;
 using WorkItem = JeffPires.BacklogChatGPTAssistant.Models.WorkItem;
-using WorkItemType = JeffPires.BacklogChatGPTAssistant.Models.WorkItem.WorkItemType;
+using WorkItemType = JeffPires.BacklogChatGPTAssistant.Models.WorkItemType;
 
 namespace JeffPires.BacklogChatGPTAssistant.Utils
 {
@@ -170,57 +170,42 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// <returns>Containing the ID of the newly created work item.</returns>
         public static async Task<int> SaveWorkItemAsync(AzureDevopsProject project, WorkItem workItem, string iterationPath)
         {
-            JsonPatchDocument patchDocument = new();
-
-            patchDocument.Add(
+            JsonPatchDocument patchDocument =
+            [
                 new JsonPatchOperation()
                 {
                     Operation = Operation.Add,
                     Path = "/fields/System.IterationPath",
                     Value = iterationPath
                 }
-             );
-
-            patchDocument.Add(
+,
                 new JsonPatchOperation()
                 {
                     Operation = Operation.Add,
                     Path = "/fields/System.Title",
                     Value = workItem.Title
                 }
-            );
-
-            patchDocument.Add(
+,
                 new JsonPatchOperation()
                 {
                     Operation = Operation.Add,
                     Path = "/fields/System.Description",
                     Value = workItem.Description
                 }
-            );
-
-            if (workItem.Type == WorkItemType.Task)
-            {
-                patchDocument.Add(
-                    new JsonPatchOperation()
+,
+                workItem.Type == WorkItemType.Task ? new JsonPatchOperation()
                     {
                         Operation = Operation.Add,
                         Path = "/fields/System.RemainingWork",
                         Value = workItem.RemainingWork
-                    }
-                );
-            }
-            else
-            {
-                patchDocument.Add(
-                    new JsonPatchOperation()
+                    } : new JsonPatchOperation()
                     {
                         Operation = Operation.Add,
                         Path = "/fields/System.AcceptanceCriteria",
                         Value = workItem.AcceptanceCriteria
                     }
-                );
-            }
+,
+            ];
 
             if (workItem.ParentId.HasValue)
             {

@@ -2,8 +2,7 @@
 using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Schema.Generation;
+using NJsonSchema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using static JeffPires.BacklogChatGPTAssistant.Models.WorkItem;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -222,6 +220,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                     WorkItemsGenerated?.Invoke(result);
                 }
             }
+            catch (OperationCanceledException ex)
+            {
+                Logger.Log(ex);
+            }
             catch (Exception ex)
             {
                 Logger.Log(ex);
@@ -347,11 +349,9 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 systemMessages.Add(options.InstructionChildren);
             }
 
-            systemMessages.Add($"Ensure the response is in the following json schema:{Environment.NewLine}{CreateAWorkItemAsExampleAsJson()}.");
+            systemMessages.Add(string.Format(Constants.COMMAND_JSON_SCHEMA, Environment.NewLine + CreateAWorkItemAsExampleAsJson()));
 
-            JSchemaGenerator generator = new();
-
-            JSchema schema = generator.Generate(typeof(List<WorkItem>));
+            JsonSchema schema = JsonSchema.FromType<List<WorkItem>>();
 
             cancellationTokenSource = new CancellationTokenSource();
 
@@ -365,15 +365,15 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
                 if (token.Type == JTokenType.Object)
                 {
-                    WorkItem workItemGenerate = JsonSerializer.Deserialize<WorkItem>(response);
+                    WorkItem workItemGenerated = JsonSerializer.Deserialize<WorkItem>(response);
 
-                    if (result.ExistentWorkItem != null && result.ExistentWorkItem.Id == workItemGenerate.Id)
+                    if (result.ExistentWorkItem != null && result.ExistentWorkItem.Id == workItemGenerated.Id)
                     {
-                        result.GeneratedWorkItems.AddRange(workItemGenerate.Children);
+                        result.GeneratedWorkItems.AddRange(workItemGenerated.Children);
                     }
                     else
                     {
-                        result.GeneratedWorkItems.Add(workItemGenerate);
+                        result.GeneratedWorkItems.Add(workItemGenerated);
                     }
                 }
                 else
@@ -387,7 +387,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             {
                 Logger.Log(ex);
 
-                MessageBox.Show("OpenAI invalid response. Please try again.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (ex is not OperationCanceledException)
+                {
+                    MessageBox.Show("OpenAI invalid response. Please try again.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
 
             return result;
@@ -480,10 +483,13 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 _ => WorkItemType.Task
             };
 
-            foreach (WorkItem childWorkItem in workItem.Children)
+            if (workItem.Children != null && workItem.Children.Count > 0)
             {
-                SetWorkItemType(childWorkItem, workItem.Type);
-            }
+                foreach (WorkItem childWorkItem in workItem.Children)
+                {
+                    SetWorkItemType(childWorkItem, workItem.Type);
+                }
+            }            
         }
 
         #endregion Methods  

@@ -46,21 +46,21 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         /// <summary>
         /// Gets or sets the collection of child work items associated with the current work item.
         /// </summary>
-        public List<WorkItem> Children { get; set; }
+        public List<WorkItem> Children { get; set; }        
+    }
 
-        /// <summary>
-        /// Enumeration representing different types of work items.
-        /// </summary>
-        public enum WorkItemType
-        {
-            [EnumStringValue("Task")]
-            Task = 0,
-            [EnumStringValue("Product Backlog Item")]
-            ProductBacklogItem = 1,
-            [EnumStringValue("Feature")]
-            Feature = 2,
-            [EnumStringValue("Epic")]
-            Epic = 3
-        }
+    /// <summary>
+    /// Enumeration representing different types of work items.
+    /// </summary>
+    public enum WorkItemType
+    {
+        [EnumStringValue("Task")]
+        Task = 0,
+        [EnumStringValue("Product Backlog Item")]
+        ProductBacklogItem = 1,
+        [EnumStringValue("Feature")]
+        Feature = 2,
+        [EnumStringValue("Epic")]
+        Epic = 3
     }
 }

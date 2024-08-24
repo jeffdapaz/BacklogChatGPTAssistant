@@ -12,6 +12,8 @@
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
         </Style>
         <Style TargetType="Image">
             <Setter Property="Width" Value="20"/>
@@ -19,8 +21,8 @@
         <Style TargetType="RadioButton">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="12"/>
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
@@ -81,7 +83,7 @@
                 ToolTip="Starting point for creating new Backlog Items."/>
             <ComboBox Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3" x:Name="cboInitialLevel" IsEnabled="false"/>
 
-            <GroupBox Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="3" Header="Start From" x:Name="gbStartFrom" Visibility="Collapsed" IsEnabled="false" FontSize="14" FontWeight="Bold">
+            <GroupBox Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="3" Header="Start From" x:Name="gbStartFrom" Visibility="Collapsed" IsEnabled="false" FontWeight="Bold" FontSize="14">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10"/>
@@ -114,7 +116,7 @@
                             <RowDefinition Height="10"/>
                             <RowDefinition Height="22"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" FontSize="14" FontWeight="Bold">Select the Parent Work Item</TextBlock>
+                        <TextBlock Grid.Row="0">Select the Parent Work Item</TextBlock>
                         <ComboBox Grid.Row="2" x:Name="cboParentWorkItem" FontSize="12" FontWeight="Normal" />
                     </Grid>
                 </Grid>

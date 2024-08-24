@@ -190,6 +190,12 @@ namespace JeffPires.BacklogChatGPTAssistant.Options
         [DefaultValue("Distribute the provided estimated project hours among the created tasks:")]
         public string InstructionEstimatedHours { get; set; } = "Distribute the provided estimated project hours among the created tasks:";
 
+        [Category("Default Instructions")]
+        [DisplayName("Improve Instruction")]
+        [Description("Define a default instruction for when you need to improve an AI-generated Work Item.")]
+        [DefaultValue("Improve the following Work Item:")]
+        public string InstructionImprove { get; set; } = "Improve the following Work Item:";
+
         #endregion Default Instructions
     }
 }

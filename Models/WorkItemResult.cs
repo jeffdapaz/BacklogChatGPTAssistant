@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using JeffPires.BacklogChatGPTAssistant.Options;
+using JeffPires.BacklogChatGPTAssistant.ToolWindows;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using static JeffPires.BacklogChatGPTAssistant.Models.WorkItem;
 
 namespace JeffPires.BacklogChatGPTAssistant.Models
 {
@@ -21,6 +23,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         private string acceptanceCriteria;
         private double? remainingWork;
         private bool isExpanded;
+        private readonly OptionPageGridGeneral optionsInstance;
 
         /// <summary>
         /// Gets or sets the unique identifier.
@@ -29,7 +32,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         {
             get => id;
             set => SetProperty(ref id, value);
-        }        
+        }
 
         /// <summary>
         /// Gets or sets the ID of the parent work item. This property is nullable.
@@ -39,7 +42,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
             get => parentId;
             set => SetProperty(ref parentId, value);
         }
-        
+
         /// <summary>
         /// Gets or sets the type of the work item.
         /// </summary>
@@ -48,7 +51,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
             get => type;
             set => SetProperty(ref type, value);
         }
-        
+
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
@@ -57,7 +60,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
             get => title;
             set => SetProperty(ref title, value);
         }
-        
+
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
@@ -66,7 +69,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
             get => description;
             set => SetProperty(ref description, value);
         }
-        
+
         /// <summary>
         /// Gets or sets the acceptance criteria.
         /// </summary>
@@ -75,7 +78,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
             get => acceptanceCriteria;
             set => SetProperty(ref acceptanceCriteria, value);
         }
-        
+
         /// <summary>
         /// Gets or sets the remaining work.
         /// </summary>
@@ -88,7 +91,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         /// <summary>
         /// Gets or sets the collection of child work items associated with the current work item.
         /// </summary>
-        public List<WorkItemResult> Children { get; set; } = new();
+        public ObservableCollection<WorkItemResult> Children { get; set; } = [];
 
         /// <summary>
         /// Gets the source of the icon associated with the work item.
@@ -119,7 +122,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         {
             WorkItemType.Task => Visibility.Visible,
             _ => Visibility.Collapsed
-        };        
+        };
 
         /// <summary>
         /// Gets or sets a value indicating whether the item is expanded.
@@ -131,7 +134,22 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         {
             get => isExpanded;
             set => SetProperty(ref isExpanded, value);
-        }        
+        }
+
+        /// <summary>
+        /// Gets or sets the instance of the OptionPageGridGeneral.
+        /// </summary>
+        public OptionPageGridGeneral OptionsInstance { get; set; }
+
+        /// <summary>
+        /// Added the Backlog Items Control Instance in each Work Item to be possible delete Top Work Items in deletion command.
+        /// </summary>
+        public ucBacklogItems BacklogItemsControlInstance { get; set; }
+
+        /// <summary>
+        /// Parent Work Item Instance
+        /// </summary>
+        public WorkItemResult ParentWorkitem { get; set; }
 
         /// <summary>
         /// Sets a property value and raises the PropertyChanged event if the value has changed.

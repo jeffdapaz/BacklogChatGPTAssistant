@@ -1,7 +1,6 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.OpenAIOverride;
 using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils.Http;
-using Newtonsoft.Json.Schema;
 using OpenAI_API;
 using OpenAI_API.Chat;
 using System;
@@ -36,7 +35,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                                                           List<string> systemMessages,
                                                           string userInput,
                                                           string[] stopSequences,
-                                                          JSchema jsonSchema,
+                                                          NJsonSchema.JsonSchema jsonSchema,
                                                           string jsonSchemaName,
                                                           CancellationToken cancellationToken)
         {
@@ -64,7 +63,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// <param name="jsonSchema">The JSON schema defining the expected response format.</param>
         /// <param name="jsonSchemaName">The name of the JSON schema.</param>
         /// <returns>A <see cref="ConversationOverride"/> instance configured for the chatbot interaction.</returns>
-        private static ConversationOverride CreateConversation(OptionPageGridGeneral options, List<string> systemMessages, JSchema jsonSchema, string jsonSchemaName)
+        private static ConversationOverride CreateConversation(OptionPageGridGeneral options, List<string> systemMessages, NJsonSchema.JsonSchema jsonSchema, string jsonSchemaName)
         {
             ConversationOverride chat;
 
@@ -84,7 +83,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
             foreach (string systemMessage in systemMessages)
             {
                 chat.AppendSystemMessage(systemMessage);
-            }            
+            }
 
             chat.AutoTruncateOnContextLengthExceeded = true;
             chat.RequestParameters.Model = string.IsNullOrWhiteSpace(options.CustomModel) ? options.Model.GetStringValue() : options.CustomModel;
@@ -110,7 +109,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         /// <returns>
         /// The created conversation override instance.
         /// </returns>
-        private static ConversationOverride CreateConversationForCompletions(OptionPageGridGeneral options, List<string> systemMessages, string userInput, string[] stopSequences, JSchema jsonSchema, string jsonSchemaName)
+        private static ConversationOverride CreateConversationForCompletions(OptionPageGridGeneral options, List<string> systemMessages, string userInput, string[] stopSequences, NJsonSchema.JsonSchema jsonSchema, string jsonSchemaName)
         {
             ConversationOverride chat = CreateConversation(options, systemMessages, jsonSchema, jsonSchemaName);
 

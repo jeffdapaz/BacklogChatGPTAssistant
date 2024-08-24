@@ -12,12 +12,24 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
 
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10"/>
+            <RowDefinition Height="0"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0" />
@@ -45,5 +57,27 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <Separator Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Background="#FF007ACC" />
+
+        <Grid Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+            <ProgressBar Grid.Column="0" x:Name="grdProgress" Visibility="Collapsed"/>
+            <TextBlock   Grid.Column="0" x:Name="txtProgress" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Visibility="Collapsed"/>
+            <Button Grid.Column="2" x:Name="btnCancel" ToolTip="Cancel" Click="btnCancel_Click">
+                <TextBlock>Cancel</TextBlock>
+            </Button>
+            <Button Grid.Column="4" x:Name="btnSave" ToolTip="Save all the Backlog Items to Azure Devops." Click="btnSave_Click">
+                <TextBlock>Save</TextBlock>
+            </Button>
+        </Grid>
+
     </Grid>
 </UserControl>

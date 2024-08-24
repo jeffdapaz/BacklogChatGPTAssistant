@@ -23,23 +23,42 @@
             <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
             <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
         </Style>
+        <Style x:Key="ImageHandCursorStyle" TargetType="{x:Type Image}">
+            <Setter Property="Cursor" Value="Arrow"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Expander IsExpanded="{Binding IsExpanded}">
         <Expander.Header>
             <Grid>
-                <Grid.RowDefinitions>
+                <Grid.RowDefinitions>                    
                     <RowDefinition Height="10"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="10"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Grid.Row="1" Source="{Binding IconSource}"/>
-                <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Title}" FontSize="14"/>
+                <Image 
+                    Grid.Column="1" 
+                    Grid.Row="1" 
+                    x:Name="btnDelete"
+                    MouseDown="btnDelete_MouseDown"
+                    Style="{StaticResource ImageHandCursorStyle}"
+                    ToolTip="Remove this Work Item and all its children."
+                    Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/garbage.png"/>
+                <Image Grid.Column="3" Grid.Row="1" Source="{Binding IconSource}"/>
+                <TextBlock Grid.Column="5" Grid.Row="1" Text="{Binding Title}" FontSize="14"/>
             </Grid>
         </Expander.Header>
         <Grid>
@@ -59,9 +78,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="55" />
+                <ColumnDefinition Width="61" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="5" />
             </Grid.ColumnDefinitions>
@@ -84,30 +105,51 @@
                 <Expander.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="20" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" FontSize="14">Add Suggestions To Improve</TextBlock>
-                        <Button 
-                            Grid.Column="2" 
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>                        
+                        <Image 
+                            Grid.Column="1" 
                             x:Name="btnImprove" 
-                            Click="btnImprove_Click" 
                             Height="20" 
                             Width="20"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            FocusVisualStyle="{x:Null}"
-                            ToolTip="Fill the bellow field with instructions to improve the backlog item using AI. After that click on this button.">
-                            <Image Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/refresh.png"/>
-                        </Button>               
+                            MouseDown="btnImprove_Click" 
+                            Style="{StaticResource ImageHandCursorStyle}"
+                            ToolTip="Fill the bellow field with instructions to improve the backlog item using AI. After that click on this button."
+                            Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/refresh.png"/>
+                        <TextBlock Grid.Column="3" FontSize="14">Add Suggestions To Improve</TextBlock>
                     </Grid>
                 </Expander.Header>
                 <TextBox x:Name="txtImprove" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Height="80" Width="{Binding Path=ActualWidth, ElementName=txtTilte}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
             </Expander>
 
-            <ItemsControl Grid.Row="14" Grid.Column="1" ItemsSource="{Binding Children}">
+            <Expander Grid.Row="14" Grid.Column="1" IsExpanded="false">
+                <Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image 
+                            Grid.Column="1" 
+                            x:Name="btnAddChildren" 
+                            Height="20" 
+                            Width="20"
+                            MouseDown="btnAddChildren_Click" 
+                            Style="{StaticResource ImageHandCursorStyle}"
+                            ToolTip="Use AI to create children for this Work Item. You can provide some instructions on the below field."
+                            Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/add.png"/>
+                        <TextBlock Grid.Column="3" FontSize="14">Add Children</TextBlock>
+                    </Grid>
+                </Expander.Header>
+                <TextBox x:Name="txtAddChildren" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Height="80" Width="{Binding Path=ActualWidth, ElementName=txtTilte}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+            </Expander>
+
+            <ItemsControl Grid.Row="16" Grid.Column="1" ItemsSource="{Binding Children}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <local:ucWorkItem DataContext="{Binding}"/>
