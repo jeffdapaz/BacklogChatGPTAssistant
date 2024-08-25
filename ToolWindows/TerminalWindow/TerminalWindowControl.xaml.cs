@@ -74,6 +74,10 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             {
                 Logger.Log(ex);
 
+                imgAlert.Visibility = Visibility.Visible;
+                lblAlert.Visibility = Visibility.Visible;
+                controlStarted = false;
+
                 MessageBox.Show(ex.Message, Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
