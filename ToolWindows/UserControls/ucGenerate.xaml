@@ -28,6 +28,14 @@
             <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
             <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
         </Style>
+        <Style x:Key="ImageHandCursorStyle" TargetType="{x:Type Image}">
+            <Setter Property="Cursor" Value="Arrow"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -50,6 +58,8 @@
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="10"/>
@@ -135,8 +145,53 @@
                 VerticalScrollBarVisibility="Auto" 
                 TextWrapping="Wrap" />
 
+            <Expander Grid.Row="18" Grid.Column="1" Grid.ColumnSpan="3" x:Name="exFilesList" IsExpanded="false">
+                <Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image 
+                            Grid.Column="1" 
+                            x:Name="btnAddFile" 
+                            Height="20" 
+                            Width="20"
+                            MouseDown="btnAddFiles_MouseDown"
+                            Style="{StaticResource ImageHandCursorStyle}"
+                            ToolTip="Load text files to provide more context for the AI ​​to generate Backlog Items."
+                            Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/add.png"/>
+                        <TextBlock Grid.Column="3" FontSize="14" Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">Load Text Files</TextBlock>
+                    </Grid>
+                </Expander.Header>
+                <ListView Name="lvFilesList" Margin="30,10,0,0" Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" Visibility="Collapsed">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image 
+                                    Grid.Column="0" 
+                                    Height="20" 
+                                    Name="btnRemoveFile" 
+                                    MouseDown="btnRemoveFile_MouseDown" 
+                                    Style="{StaticResource ImageHandCursorStyle}"
+                                    ToolTip="Remove this file from the list." 
+                                    Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/garbage.png" />
+                                <TextBlock Grid.Column="2" Text="{Binding}" FontSize="14" Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Expander>
+
             <CheckBox 
-                Grid.Row="18" 
+                Grid.Row="20" 
                 Grid.Column="1" 
                 x:Name="chkGenerateChildren" 
                 VerticalAlignment="Center" 
@@ -146,19 +201,19 @@
                 Click="chkGenerateChildren_Click">
                 Generate Children
             </CheckBox>
-            <Image Grid.Row="18" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+            <Image Grid.Row="20" Grid.Column="3" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
                 ToolTip="Check this box if you want the AI to create child work items for each parent work item, such as tasks for user stories."/>
 
-            <StackPanel Grid.Row="20" Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed" x:Name="spEstimateProjectHours">
+            <StackPanel Grid.Row="22" Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed" x:Name="spEstimateProjectHours">
                 <TextBlock Margin="0,0,10,0">Estimate Project Hours</TextBlock>
                 <TextBox x:Name="txtEstimateProjectHours" Width="30" Text="0" TextAlignment="Right" PreviewTextInput="txtEstimateProjectHours_PreviewTextInput"/>
             </StackPanel>
-            <Image Grid.Row="20" Grid.Column="3" Visibility="Collapsed" x:Name="imgEstimateProjectHours" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
+            <Image Grid.Row="22" Grid.Column="3" Visibility="Collapsed" x:Name="imgEstimateProjectHours" Source="pack://application:,,,/BacklogChatGPTAssistant;component/Resources/information.png" 
                 ToolTip="Enter the estimated number of hours for the project (user story). This information will be used by the AI to distribute the estimated hours among the created tasks."/>
 
-            <Separator Grid.Row="22" Grid.Column="1" Grid.ColumnSpan="3" Background="#FF007ACC" />
+            <Separator Grid.Row="24" Grid.Column="1" Grid.ColumnSpan="3" Background="#FF007ACC" />
 
-            <Grid Grid.Row="24" Grid.Column="1" Grid.ColumnSpan="3">                
+            <Grid Grid.Row="26" Grid.Column="1" Grid.ColumnSpan="3">                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />

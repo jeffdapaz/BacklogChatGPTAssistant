@@ -5,12 +5,16 @@ using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using MessageBox = System.Windows.MessageBox;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
@@ -36,6 +40,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         private readonly OptionPageGridGeneral options;
         private readonly bool controlStarted = false;
         private CancellationTokenSource cancellationTokenSource;
+        private Dictionary<string, string> selectedFiles = [];
 
         #endregion Properties
 
@@ -195,6 +200,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         private void chkGenerateChildren_Click(object sender, RoutedEventArgs e)
         {
             spEstimateProjectHours.Visibility = chkGenerateChildren.IsChecked.Value ? Visibility.Visible : Visibility.Collapsed;
+            imgEstimateProjectHours.Visibility = spEstimateProjectHours.Visibility;
         }
 
         /// <summary>
@@ -243,6 +249,68 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             ResetPage();
+        }
+
+        /// <summary>
+        /// Handles the MouseDown event for the btnAddFiles button. 
+        /// Opens a file dialog allowing the user to select multiple Word or PDF files. 
+        /// If files are selected, adds their paths to the lvFilesList and makes it visible.
+        /// </summary>
+        private void btnAddFiles_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new()
+            {
+                Multiselect = true,
+                Filter = "All Files (*.*)|*.*|Word (*.docx)|*.docx|PDF (*.pdf)|*.pdf",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                if (openFileDialog.FileNames.Count(f => Path.GetExtension(f) != ".docx" && Path.GetExtension(f) != ".pdf") > 0)
+                {
+                    MessageBox.Show("You can only select docx or PDF files.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                    return;
+                }
+
+                foreach (string filename in openFileDialog.FileNames)
+                {
+                    selectedFiles.Add(filename, Path.GetFileName(filename));
+
+                    lvFilesList.Items.Add(Path.GetFileName(filename));
+                }
+
+                lvFilesList.Visibility = Visibility.Visible;
+                exFilesList.IsExpanded = true;
+            }
+        }
+
+        /// <summary>
+        /// Handles the MouseDown event for the btnRemoveFile button.
+        /// Removes the specified file from the lvFilesList and collapses the list if empty.
+        /// </summary>
+        private void btnRemoveFile_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Image button = sender as Image;
+
+            string fileToRemove = button.DataContext as string;
+
+            lvFilesList.Items.Remove(fileToRemove);
+
+            foreach (KeyValuePair<string, string> selectedFile in selectedFiles)
+            {
+                if (selectedFile.Value.Equals(fileToRemove))
+                {
+                    selectedFiles.Remove(selectedFile.Key);
+                    break;
+                }
+            }
+
+            if (lvFilesList.Items.Count == 0)
+            {
+                lvFilesList.Visibility = Visibility.Collapsed;
+            }
         }
 
         #endregion Event Handlers
@@ -489,7 +557,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 {
                     SetWorkItemType(childWorkItem, workItem.Type);
                 }
-            }            
+            }
         }
 
         #endregion Methods  
