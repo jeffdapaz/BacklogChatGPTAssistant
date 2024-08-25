@@ -93,7 +93,7 @@
             <TextBlock Grid.Row="4" Grid.Column="1">Description</TextBlock>
             <TextBox MaxWidth="{Binding Path=ActualWidth, ElementName=txtTilte}" Grid.Row="5" Grid.Column="1" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Margin="0,0,10,0" />
 
-            <TextBlock Grid.Row="7" Grid.Column="1" Height="20">Acceptance Criteria</TextBlock>
+            <TextBlock Grid.Row="7" Grid.Column="1" Height="20" Visibility="{Binding AcceptanceCriteriaVisibility}">Acceptance Criteria</TextBlock>
             <TextBox MaxWidth="{Binding Path=ActualWidth, ElementName=txtTilte}" Grid.Row="8" Grid.Column="1" Height="80" Text="{Binding AcceptanceCriteria, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Margin="0,0,10,0" Visibility="{Binding AcceptanceCriteriaVisibility}" />
 
             <StackPanel Grid.Row="10" Grid.Column="1" Height="20" Orientation="Horizontal" Visibility="{Binding RemainingWorkVisibility}">
@@ -125,7 +125,7 @@
                 <TextBox x:Name="txtImprove" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Height="80" Width="{Binding Path=ActualWidth, ElementName=txtTilte}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
             </Expander>
 
-            <Expander Grid.Row="14" Grid.Column="1" IsExpanded="false">
+            <Expander Grid.Row="14" Grid.Column="1" IsExpanded="false" Visibility="{Binding AcceptanceCriteriaVisibility}">
                 <Expander.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>

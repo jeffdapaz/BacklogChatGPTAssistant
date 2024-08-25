@@ -235,7 +235,8 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 Description = workItemResult.Description,
                 RemainingWork = workItemResult.RemainingWork,
                 Title = workItemResult.Title,
-                Type = workItemResult.Type
+                Type = workItemResult.Type,
+                Children = []
             };
 
             if (workItemResult.Children != null && workItemResult.Children.Count > 0)
@@ -280,24 +281,43 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
         private async Task SaveWorkItems()
         {
-            foreach (WorkItemResult workItemResult in workItems)
+            try
             {
-                if (!savingWorkItems)
+                foreach (WorkItemResult workItemResult in workItems)
                 {
-                    return;
+                    if (!savingWorkItems)
+                    {
+                        return;
+                    }
+
+                    WorkItem workItem = ConvertToWorkItem(workItemResult);
+
+                    if (generateResult.ExistentWorkItem != null)
+                    {
+                        workItem.ParentId = generateResult.ExistentWorkItem.Id;
+                    }
+
+                    await SaveWorkItem(workItem);
                 }
 
-                WorkItem workItem = ConvertToWorkItem(workItemResult);
+                MessageBox.Show("Work Items successfully saved.", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Information);
 
-                if (generateResult.ExistentWorkItem != null)
-                {
-                    workItem.ParentId = generateResult.ExistentWorkItem.Id;
-                }
+                Canceled?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
 
-                await SaveWorkItem(workItem);
+                ResetPage();
+
+                MessageBox.Show(ex.Message, Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
+        /// <summary>
+        /// Asynchronously saves a work item and its children to Azure DevOps.
+        /// </summary>
+        /// <param name="workItem">The work item to be saved, which may contain child work items.</param>
         private async Task SaveWorkItem(WorkItem workItem)
         {
             int id = await AzureDevops.SaveWorkItemAsync(generateResult.SelectedProject, workItem, generateResult.SelectedIterationPath);

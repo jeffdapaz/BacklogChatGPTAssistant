@@ -131,7 +131,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             {
                 Logger.Log(ex);
 
-                MessageBox.Show($"Please try again: {ex.Message}", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Please try again:{Environment.NewLine + Environment.NewLine + ex.Message}", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             finally
             {
@@ -233,7 +233,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             {
                 Logger.Log(ex);
 
-                MessageBox.Show($"Please try again: {ex.Message}", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Please try again:{Environment.NewLine + Environment.NewLine + ex.Message}", Constants.EXTENSION_NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             finally
             {

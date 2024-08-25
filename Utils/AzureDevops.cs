@@ -196,12 +196,12 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                 workItem.Type == WorkItemType.Task ? new JsonPatchOperation()
                     {
                         Operation = Operation.Add,
-                        Path = "/fields/System.RemainingWork",
+                        Path = "/fields/Microsoft.VSTS.Scheduling.RemainingWork",
                         Value = workItem.RemainingWork
                     } : new JsonPatchOperation()
                     {
                         Operation = Operation.Add,
-                        Path = "/fields/System.AcceptanceCriteria",
+                        Path = "/fields/Microsoft.VSTS.Common.AcceptanceCriteria",
                         Value = workItem.AcceptanceCriteria
                     }
 ,
