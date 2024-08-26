@@ -187,8 +187,8 @@ namespace JeffPires.BacklogChatGPTAssistant.Options
         [Category("Default Instructions")]
         [DisplayName("Estimated Hours Instruction")]
         [Description("Define an instruction to indicate the estimated hours for the project. This instruction will guide the service in distributing the hours among the Tasks. It is not necessary to specify the hours, as it will be included in the instruction later.")]
-        [DefaultValue("Distribute the provided estimated project hours among the created tasks:")]
-        public string InstructionEstimatedHours { get; set; } = "Distribute the provided estimated project hours among the created tasks:";
+        [DefaultValue("Distribute the provided estimated project hours among the created tasks according to the complexity of each one:")]
+        public string InstructionEstimatedHours { get; set; } = "Distribute the provided estimated project hours among the created tasks according to the complexity of each one:";
 
         [Category("Default Instructions")]
         [DisplayName("Improve Instruction")]

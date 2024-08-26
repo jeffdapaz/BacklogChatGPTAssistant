@@ -18,7 +18,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         private static OpenAIAPI openAiAPI;
         private static OpenAIAPI azureAPI;
         private static ChatGPTHttpClientFactory chatGPTHttpClient;
-        private static readonly TimeSpan timeout = new(0, 0, 120);
+        private static readonly TimeSpan timeout = new(0, 0, 240);
 
         /// <summary>
         /// Asynchronously gets a response from a chatbot based on the provided options, system messages, user input, stop sequences, and JSON schema.
