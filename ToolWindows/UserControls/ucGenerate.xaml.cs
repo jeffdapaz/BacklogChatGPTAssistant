@@ -417,6 +417,22 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 systemMessages.Add(options.InstructionChildren);
             }
 
+            foreach (KeyValuePair<string, string> file in selectedFiles)
+            {
+                string fileText;
+
+                if (Path.GetExtension(file.Value) == ".docx")
+                {
+                    fileText = FileReader.GetTextFromDocx(file.Key);
+                }
+                else 
+                {
+                    fileText = FileReader.GetTextFromPDF(file.Key);
+                }
+
+                systemMessages.Add(file.Value + Environment.NewLine + Environment.NewLine + fileText);
+            }
+
             systemMessages.Add(string.Format(Constants.COMMAND_JSON_SCHEMA, Environment.NewLine + CreateAWorkItemAsExampleAsJson()));
 
             JsonSchema schema = JsonSchema.FromType<List<WorkItem>>();

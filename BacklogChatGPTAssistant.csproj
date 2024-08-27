@@ -84,6 +84,7 @@
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="OpenAIOverride\ConversationOverride.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
+    <Compile Include="Utils\FileReader.cs" />
     <Compile Include="Utils\Http\ChatGPTHttpClientFactory.cs" />
     <Compile Include="Utils\Http\HttpClientCustom.cs" />
     <Compile Include="Utils\Http\RequestCaptureHandler.cs" />
@@ -129,6 +130,12 @@
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
     <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.507" ExcludeAssets="Runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="DocX">
+      <Version>3.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="itext7">
+      <Version>8.0.5</Version>
     </PackageReference>
     <PackageReference Include="MdXaml">
       <Version>1.27.0</Version>
