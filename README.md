@@ -1,4 +1,5 @@
 # Backlog chatGPT Assistant <img src="https://user-images.githubusercontent.com/63928228/278760982-5a3be81c-0cb0-4e59-98f6-705b371553e5.png" width="3.5%">
+![image](https://github.com/user-attachments/assets/f2af030f-9584-4734-9e37-bce8a56a2e98)
 
 ## Description 💬
 
