@@ -41,7 +41,31 @@ This view displays the AI-generated backlog items, allowing users to review, edi
 
 If you find Backlog chatGPT Assistant helpful, you might also be interested in my other extension, [Visual chatGPT Studio](https://marketplace.visualstudio.com/items?itemName=jefferson-pires.VisualChatGPTStudio), which integrates chatGPT directly within Visual Studio to enhance your coding experience with features like intelligent code suggestions, automated code reviews, and more. Ideal for developers who want to boost their productivity and code quality!
 
-## Authentication 🔑
+## Azure DevOps Authentication and Configuration 🔐
+
+To use the Backlog chatGPT Assistant with Azure DevOps, you need to authenticate and configure your connection. You have two options to set up your credentials:
+
+### 1. Set your PAT (Personal Access Token) in Settings (Optional)
+A Personal Access Token (PAT) in Azure DevOps is a security token that allows you to authenticate and access Azure DevOps services. If you prefer, you can configure your PAT directly in the extension's settings:
+
+- **Navigate to the extension settings** within Visual Studio.
+- **Locate the PAT configuration option** and input your Personal Access Token.
+- **Save the settings**.
+
+### 2. Login Prompt
+If you choose not to provide a PAT, you will be prompted to log in with your Azure DevOps credentials when you open the extension. Simply enter your Azure DevOps credentials when prompted.
+
+### Configuring the Azure DevOps URL
+In addition to authentication, you'll need to specify the Azure DevOps URL where your work items will be created. This can be done by:
+
+- **Opening the extension settings** within Visual Studio.
+- **Entering the Azure DevOps URL** in the designated field.
+- **Saving your configuration**.
+
+This URL is essential for establishing the connection between the extension and your Azure DevOps organization or project.
+
+
+## OpenAI Authentication 🔑
 
 To use this tool it is necessary to connect through the OpenAI API, Azure OpenAI, or any other API that is OpenAI API compatible.
 
