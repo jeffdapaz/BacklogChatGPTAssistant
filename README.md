@@ -15,11 +15,15 @@ Backlog chatGPT Assistant is a Visual Studio extension designed to streamline th
 
 ### Configuration View
 
-In this view, users can select the target Azure DevOps project and provide instructions for generating backlog items.
+In this view, users can select the target Azure DevOps project and provide instructions for generating backlog items:
+
+
 
 ### Review and Edit View
 
-This view displays the AI-generated backlog items, allowing users to review, edit, or use AI to further enhance these items or create child tasks.
+This view displays the AI-generated backlog items, allowing users to review, edit, or use AI to further enhance these items or create child tasks:
+
+
 
 ## Seamless Workflow ⚙
 
