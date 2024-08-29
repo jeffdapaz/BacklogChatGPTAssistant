@@ -46,7 +46,18 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         /// <summary>
         /// Gets or sets the collection of child work items associated with the current work item.
         /// </summary>
-        public List<WorkItem> Children { get; set; }        
+        public List<WorkItem> Children { get; set; }
+    }
+
+    /// <summary>
+    /// Represents the schema for a work item, defining its structure and properties.
+    /// </summary>
+    public class WorkItemSchema
+    {
+        /// <summary>
+        /// Gets or sets the collection of work items.
+        /// </summary>
+        public List<WorkItem> WorkItems { get; set; }
     }
 
     /// <summary>

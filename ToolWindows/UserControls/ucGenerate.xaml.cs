@@ -1,7 +1,6 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Models;
 using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
-using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using System;
 using System.Collections.Generic;
@@ -425,7 +424,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 {
                     fileText = FileReader.GetTextFromDocx(file.Key);
                 }
-                else 
+                else
                 {
                     fileText = FileReader.GetTextFromPDF(file.Key);
                 }
@@ -435,7 +434,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             systemMessages.Add(string.Format(Constants.COMMAND_JSON_SCHEMA, Environment.NewLine + CreateAWorkItemAsExampleAsJson()));
 
-            JsonSchema schema = JsonSchema.FromType<List<WorkItem>>();
+            JsonSchema schema = JsonSchema.FromType<WorkItemSchema>();
 
             cancellationTokenSource = new CancellationTokenSource();
 
@@ -445,24 +444,26 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
             try
             {
-                JToken token = JToken.Parse(response);
+                WorkItemSchema workItemGenerated = JsonSerializer.Deserialize<WorkItemSchema>(response);
 
-                if (token.Type == JTokenType.Object)
+                //To ensure that it won't add the already existing Work Item to the result.
+                if (result.ExistentWorkItem != null)
                 {
-                    WorkItem workItemGenerated = JsonSerializer.Deserialize<WorkItem>(response);
-
-                    if (result.ExistentWorkItem != null && result.ExistentWorkItem.Id == workItemGenerated.Id)
+                    foreach (WorkItem workItem in workItemGenerated.WorkItems)
                     {
-                        result.GeneratedWorkItems.AddRange(workItemGenerated.Children);
-                    }
-                    else
-                    {
-                        result.GeneratedWorkItems.Add(workItemGenerated);
+                        if (workItem.Id == result.ExistentWorkItem.Id && workItem.Children.Any())
+                        {
+                            result.GeneratedWorkItems.AddRange(workItem.Children);
+                        }
+                        else
+                        {
+                            result.GeneratedWorkItems.Add(workItem);
+                        }
                     }
                 }
                 else
                 {
-                    result.GeneratedWorkItems = JsonSerializer.Deserialize<List<WorkItem>>(response);
+                    result.GeneratedWorkItems.AddRange(workItemGenerated.WorkItems);
                 }
 
                 SetWorkItemsType(result);
@@ -470,6 +471,8 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             catch (Exception ex)
             {
                 Logger.Log(ex);
+
+                result.GeneratedWorkItems = [];
 
                 if (ex is not OperationCanceledException)
                 {
@@ -515,22 +518,25 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         /// </returns>
         private string CreateAWorkItemAsExampleAsJson()
         {
-            List<WorkItem> workItems =
-            [
-                new()
-                {
-                    Id = 0,
-                    ParentId = 0,
-                    Type = WorkItemType.ProductBacklogItem,
-                    Title = "Example Work Item",
-                    Description = "This is an example work item.",
-                    AcceptanceCriteria = "This is an example of an Acceptance Criteria",
-                    RemainingWork = 0,
-                    Children = []
-                }
-            ];
+            WorkItemSchema workItemSchema = new()
+            {
+                WorkItems =
+                [
+                    new()
+                    {
+                        Id = 0,
+                        ParentId = 0,
+                        Type = WorkItemType.ProductBacklogItem,
+                        Title = "Example Work Item",
+                        Description = "This is an example work item.",
+                        AcceptanceCriteria = "This is an example of an Acceptance Criteria",
+                        RemainingWork = 0,
+                        Children = []
+                    }
+                ]
+            };
 
-            return JsonSerializer.Serialize(workItems);
+            return JsonSerializer.Serialize(workItemSchema);
         }
 
         /// <summary>

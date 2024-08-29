@@ -23,7 +23,7 @@ In this view, users can select the target Azure DevOps project and provide instr
 
 This view displays the AI-generated backlog items, allowing users to review, edit, or use AI to further enhance these items or create child tasks:
 
-
+You will find this window in menu View -> Other Windows -> Backlog chatGPT Assistant.
 
 ## Seamless Workflow ⚙
 

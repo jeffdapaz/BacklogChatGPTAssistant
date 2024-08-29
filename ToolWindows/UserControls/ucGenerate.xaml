@@ -143,6 +143,7 @@
                 x:Name="txtInstructions" 
                 AcceptsReturn="True" 
                 VerticalScrollBarVisibility="Auto" 
+                MaxWidth="{Binding Path=ActualWidth, ElementName=cboProjects}"
                 TextWrapping="Wrap" />
 
             <Expander Grid.Row="18" Grid.Column="1" Grid.ColumnSpan="3" x:Name="exFilesList" IsExpanded="false">

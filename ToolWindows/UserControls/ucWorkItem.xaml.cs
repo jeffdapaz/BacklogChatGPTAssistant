@@ -1,10 +1,10 @@
 ﻿using JeffPires.BacklogChatGPTAssistant.Models;
 using JeffPires.BacklogChatGPTAssistant.Options;
 using JeffPires.BacklogChatGPTAssistant.Utils;
-using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -166,8 +166,6 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
                 workItem.BacklogItemsControlInstance.StartWorkItemProcessing(cancellationTokenSource, "Creating children for the Work Item...");
 
-                string workItemAsJson = JsonSerializer.Serialize(ConvertToWorkItem(workItem));
-
                 List<string> systemMessages = [];
 
                 if (!string.IsNullOrWhiteSpace(workItem.OptionsInstance.InstructionDefault))
@@ -187,23 +185,24 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                     systemMessages.Add(workItem.OptionsInstance.InstructionChildren);
                 }
 
+                string workItemAsJson = JsonSerializer.Serialize(ConvertToWorkItem(workItem));
+
                 systemMessages.Add($"{workItem.OptionsInstance.InstructionParentWork} Parent item:{Environment.NewLine + workItemAsJson}");
 
-                systemMessages.Add(string.Format(Constants.COMMAND_JSON_SCHEMA, Environment.NewLine + workItemAsJson));
+                systemMessages.Add(string.Format(Constants.COMMAND_JSON_SCHEMA, Environment.NewLine + CreateAWorkItemAsExampleAsJson()));
 
-                JsonSchema schema = JsonSchema.FromType<List<WorkItem>>();
+                JsonSchema schema = JsonSchema.FromType<WorkItemSchema>();
 
                 string response = await ChatGPT.GetResponseAsync(workItem.OptionsInstance, systemMessages, txtAddChildren.Text, null, schema, nameof(WorkItem), cancellationTokenSource.Token);
 
                 response = TextFormat.RemoveLanguageIdentifier(response);
 
-                JToken token = JToken.Parse(response);
+                WorkItemSchema workItemsGenerated = JsonSerializer.Deserialize<WorkItemSchema>(response);
 
-                if (token.Type == JTokenType.Object)
+                //To ensure that it won't add the already existing Work Item to the result.
+                foreach (WorkItem workItemGenerated in workItemsGenerated.WorkItems)
                 {
-                    WorkItem workItemGenerated = JsonSerializer.Deserialize<WorkItem>(response);
-
-                    if (workItem.Id == workItemGenerated.Id)
+                    if (workItemGenerated.Id == workItem.Id && workItemGenerated.Children.Any())
                     {
                         foreach (WorkItem child in workItemGenerated.Children)
                         {
@@ -211,15 +210,6 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                         }
                     }
                     else
-                    {
-                        workItem.Children.Add(ConvertWorkItemToResult(workItemGenerated, workItemChildrenType, workItem.OptionsInstance, workItem));
-                    }
-                }
-                else
-                {
-                    List<WorkItem> workItemsGenerated = JsonSerializer.Deserialize<List<WorkItem>>(response);
-
-                    foreach (WorkItem workItemGenerated in workItemsGenerated)
                     {
                         workItem.Children.Add(ConvertWorkItemToResult(workItemGenerated, workItemChildrenType, workItem.OptionsInstance, workItem));
                     }
@@ -315,6 +305,35 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 WorkItemType.ProductBacklogItem => WorkItemType.Task,
                 _ => WorkItemType.Task
             };
+        }
+
+        /// <summary>
+        /// Creates an example work item and serializes it to JSON format.
+        /// </summary>
+        /// <returns>
+        /// A JSON string representation of the example work item.
+        /// </returns>
+        private string CreateAWorkItemAsExampleAsJson()
+        {
+            WorkItemSchema workItemSchema = new()
+            {
+                WorkItems =
+                [
+                    new()
+                    {
+                        Id = 0,
+                        ParentId = 0,
+                        Type = WorkItemType.ProductBacklogItem,
+                        Title = "Example Work Item",
+                        Description = "This is an example work item.",
+                        AcceptanceCriteria = "This is an example of an Acceptance Criteria",
+                        RemainingWork = 0,
+                        Children = []
+                    }
+                ]
+            };
+
+            return JsonSerializer.Serialize(workItemSchema);
         }
 
         #endregion Methods            
