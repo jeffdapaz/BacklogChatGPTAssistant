@@ -4,6 +4,8 @@
 
 Backlog chatGPT Assistant is a Visual Studio extension designed to streamline the process of creating backlog items in Azure DevOps using AI. This tool enables users to generate new work items based on pre-selected items, user instructions, or content from text files (like DOCX and PDF) directly within Visual Studio.
 
+[Download here](https://marketplace.visualstudio.com/items?itemName=jefferson-pires.BacklogChatGPTAssistant)
+
 ### Main Features 🌟
 
 1. **Azure DevOps Integration:** Easily choose where to create new backlog items in Azure DevOps.
