@@ -17,13 +17,13 @@ Backlog chatGPT Assistant is a Visual Studio extension designed to streamline th
 
 In this view, users can select the target Azure DevOps project and provide instructions for generating backlog items:
 
-<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210225.png" width="50%">
+<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210225.png" width="55%">
 
 ### Review and Edit View
 
 This view displays the AI-generated backlog items, allowing users to review, edit, or use AI to further enhance these items or create child tasks:
 
-<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210430.png" width="50%">
+<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210430.png" width="55%">
 
 You will find this window in menu View -> Other Windows -> Backlog chatGPT Assistant.
 
@@ -83,7 +83,7 @@ To use this tool it is necessary to connect through the OpenAI API, Azure OpenAI
 
 3 - Copy and past the key on options and set the `OpenAI Service` parameter as `OpenAI`: 
 
-<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210708.png" width="45%">
+<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210708.png" width="50%">
 
 ### By Azure
 
@@ -93,19 +93,19 @@ To use this tool it is necessary to connect through the OpenAI API, Azure OpenAI
 
 <img src="https://github.com/jeffdapaz/VisualChatGPTStudio/assets/63928228/8bf9111b-cc4d-46ac-a4f2-094e83922d95" width="60%">
 
-<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210837.png" width="45%">
+<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210837.png" width="50%">
 
 3 - Copy and past the key on options and set the `OpenAI Service` parameter as `AzureOpenAI`: 
 
 <img src="https://github.com/jeffdapaz/VisualChatGPTStudio/assets/63928228/2f881df1-a95f-4016-bf39-9cf2e83aef0e" width="75%">
 
-<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210922.png" width="45%">
+<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210922.png" width="50%">
 
 4 - Create a new deployment through Azure OpenAI Studio, and set the name:
 
 <img src="https://github.com/jeffdapaz/VisualChatGPTStudio/assets/63928228/3914ddf3-e0c5-4edd-9add-dab5aba12aa9" width="40%">
 
-<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_211111.png" width="45%">
+<img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_211111.png" width="50%">
 
 5 - Set the Azure OpenAI API version. You can check the available versions [here](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#completions).
 
