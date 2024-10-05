@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="BacklogChatGPTAssistant.20F8C965-0DA2-4698-AF55-FF046627A73F" Version="1.0.0" Language="en-US" Publisher="Jefferson Pires" />
+        <Identity Id="BacklogChatGPTAssistant.20F8C965-0DA2-4698-AF55-FF046627A73F" Version="1.1.0" Language="en-US" Publisher="Jefferson Pires" />
         <DisplayName>Backlog ChatGPT Assistant</DisplayName>
         <Description xml:space="preserve">Backlog chatGPT Assistant is a Visual Studio extension that streamlines the creation of backlog items in Azure DevOps using AI. It allows users to generate new work items from pre-selected items, user instructions, or content from text files (such as DOCX and PDF) directly within Visual Studio.</Description>
         <Icon>logo.png</Icon>

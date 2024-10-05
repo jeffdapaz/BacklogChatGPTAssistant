@@ -87,7 +87,7 @@ To use this tool it is necessary to connect through the OpenAI API, Azure OpenAI
 
 <img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_210708.png" width="55%">
 
-### By Azure
+### By Azure (API Key Authentication)
 
 1 - First, you need have access to Azure OpenAI Service. You can see more details [here](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/limited-access?context=%2Fazure%2Fcognitive-services%2Fopenai%2Fcontext%2Fcontext).
 
@@ -110,6 +110,20 @@ To use this tool it is necessary to connect through the OpenAI API, Azure OpenAI
 <img src="https://jefferson-pires.gallerycdn.vsassets.io/extensions/jefferson-pires/backlogchatgptassistant/1.0.0/1725050136867/Captura_de_ecr__2024-08-30_211111.png" width="55%">
 
 5 - Set the Azure OpenAI API version. You can check the available versions [here](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#completions).
+
+### By Azure (Entra ID Authentication)
+
+In addition to API Key authentication, you can now authenticate to Azure OpenAI using Microsoft Entra ID. To enable this option:
+
+1 - Ensure your Azure OpenAI deployment is registered in Entra ID, and the user has access permissions.
+
+2 - In the extension settings, set the parameter Entra ID Authentication to true.
+
+3 - Define the Application Id and Tenant Id for your application in the settings.
+
+4 - The first time you run any command, you will be prompted to log in using your Microsoft account.
+
+5 - For more details on setting up Entra ID authentication, refer to the documentation [here](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/managed-identity).
 
 ### By Others Customs LLM
 
@@ -163,6 +177,12 @@ You can check your quota here: [https://platform.openai.com/account/usage](https
 - [NJsonSchema](https://github.com/RicoSuter/NJsonSchema)
 
 ## Release Notes 📜
+
+### 1.1.0
+
+- Added the possibility to use your Microsoft Account to authenticate to the Azure Open AI Service through Entra ID.
+- Fixed connection with Azure OpenAI.
+- Changed the default Azure OpenAI API version to 2024-08-01-preview due compatibility.
 
 ### 1.0.0
 

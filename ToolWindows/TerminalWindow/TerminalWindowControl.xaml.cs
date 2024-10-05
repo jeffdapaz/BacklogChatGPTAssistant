@@ -49,7 +49,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(options.ApiKey) || string.IsNullOrWhiteSpace(options.AzureDevopsUrl))
+                if ((!options.AzureEntraIdAuthentication && string.IsNullOrWhiteSpace(options.ApiKey)) || string.IsNullOrWhiteSpace(options.AzureDevopsUrl))
                 {
                     imgAlert.Visibility = Visibility.Visible;
                     lblAlert.Visibility = Visibility.Visible;

@@ -66,23 +66,18 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
         private static ConversationOverride CreateConversation(OptionPageGridGeneral options, List<string> systemMessages, NJsonSchema.JsonSchema jsonSchema, string jsonSchemaName)
         {
             ConversationOverride chat;
-            string responseFormatType;
 
             if (options.Service == OpenAIService.OpenAI)
             {
                 CreateOpenAIApiHandler(options);
 
                 chat = new ConversationOverride((ChatEndpoint)openAiAPI.Chat);
-
-                responseFormatType = "json_schema";
             }
             else
             {
                 CreateAzureApiHandler(options);
 
                 chat = new ConversationOverride((ChatEndpoint)azureAPI.Chat);
-
-                responseFormatType = "json_object";
             }
 
             foreach (string systemMessage in systemMessages)
@@ -97,7 +92,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
             chat.RequestParameters.TopP = options.TopP;
             chat.RequestParameters.FrequencyPenalty = options.FrequencyPenalty;
             chat.RequestParameters.PresencePenalty = options.PresencePenalty;
-            chat.RequestParameters.ResponseFormat = new() { Type = responseFormatType, JsonSchema = new() { Name = jsonSchemaName, Schema = jsonSchema } };
+            chat.RequestParameters.ResponseFormat = new() { Type = "json_schema", JsonSchema = new() { Name = jsonSchemaName, Schema = jsonSchema } };
 
             return chat;
         }
