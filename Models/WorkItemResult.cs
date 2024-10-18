@@ -100,7 +100,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
         {
             WorkItemType.Epic => "pack://application:,,,/BacklogChatGPTAssistant;component/Resources/epic.png",
             WorkItemType.Feature => "pack://application:,,,/BacklogChatGPTAssistant;component/Resources/feature.png",
-            WorkItemType.ProductBacklogItem => "pack://application:,,,/BacklogChatGPTAssistant;component/Resources/backlog.png",
+            WorkItemType.UserStory => "pack://application:,,,/BacklogChatGPTAssistant;component/Resources/backlog.png",
             _ => "pack://application:,,,/BacklogChatGPTAssistant;component/Resources/task.png"
         };
 

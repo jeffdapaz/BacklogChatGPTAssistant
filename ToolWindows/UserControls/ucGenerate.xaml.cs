@@ -37,9 +37,9 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         #region Properties
 
         private readonly OptionPageGridGeneral options;
-        private readonly bool controlStarted = false;
+        private bool controlStarted = false;
         private CancellationTokenSource cancellationTokenSource;
-        private Dictionary<string, string> selectedFiles = [];
+        private readonly Dictionary<string, string> selectedFiles = [];
 
         #endregion Properties
 
@@ -59,15 +59,9 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             cboProjects.SelectionChanged += cboProjects_SelectionChanged;
             cboIterationPaths.SelectionChanged += cboIterationPaths_SelectionChanged;
             cboInitialLevel.SelectionChanged += cboInitialLevel_SelectionChanged;
-            cboInitialLevel.SelectedIndex = 0;
-
-            List<WorkItemType> workItemTypes = Enum.GetValues(typeof(WorkItemType)).Cast<WorkItemType>().Reverse().ToList();
-            cboInitialLevel.ItemsSource = workItemTypes.Select(wi => wi.GetStringValue()).ToList();
 
             cboProjects.ItemsSource = AzureDevops.ListProjects();
             cboProjects.DisplayMemberPath = nameof(AzureDevopsProject.Name);
-
-            controlStarted = true;
         }
 
         #endregion Constructors
@@ -75,16 +69,36 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         #region Event Handlers
 
         /// <summary>
-        /// Handles the selection change event for the project combo box.
-        /// Asynchronously retrieves and populates the iteration paths based on the selected project.
-        /// If an error occurs during the retrieval, it logs the exception and displays a warning message.
+        /// Handles the selection change event for the project combo box. 
+        /// It retrieves the iteration paths for the selected project and populates the initial level combo box 
+        /// with the corresponding work item types. In case of an error, it logs the exception and displays a warning message.
         /// </summary>
-        private async void cboProjects_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private async void cboProjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                cboIterationPaths.ItemsSource = await AzureDevops.ListInterationPathsAsync(((AzureDevopsProject)cboProjects.SelectedItem).Name);
+                string projectName = ((AzureDevopsProject)cboProjects.SelectedItem).Name;
+
+                cboIterationPaths.ItemsSource = await AzureDevops.ListInterationPathsAsync(projectName);
                 cboIterationPaths.IsEnabled = true;
+
+                List<WorkItemType> workItemTypes = Enum.GetValues(typeof(WorkItemType)).Cast<WorkItemType>().Reverse().ToList();
+
+                Dictionary<WorkItemType, string> items = [];
+
+                foreach (WorkItemType item in workItemTypes)
+                {
+                    string workItemTypeName = await item.GetWorkItemTypeStringValueAsync(projectName);
+
+                    items.Add(item, workItemTypeName);
+                }
+
+                cboInitialLevel.ItemsSource = items;
+                cboInitialLevel.DisplayMemberPath = "Value";
+                cboInitialLevel.SelectedValuePath = "Key";
+                cboInitialLevel.SelectedIndex = 0;
+
+                controlStarted = true;
             }
             catch (Exception ex)
             {
@@ -145,7 +159,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                 chkGenerateChildren.Visibility = Visibility.Collapsed;
             }
 
-            if (chkGenerateChildren.IsChecked.Value || initialLevelSelected == WorkItemType.ProductBacklogItem || initialLevelSelected == WorkItemType.Task)
+            if (chkGenerateChildren.IsChecked.Value || initialLevelSelected == WorkItemType.UserStory || initialLevelSelected == WorkItemType.Task)
             {
                 spEstimateProjectHours.Visibility = Visibility.Visible;
                 imgEstimateProjectHours.Visibility = Visibility.Visible;
@@ -335,9 +349,9 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
 
                 if (selectedInitialLevel == WorkItemType.Task)
                 {
-                    selectedInitialLevel = WorkItemType.ProductBacklogItem;
+                    selectedInitialLevel = WorkItemType.UserStory;
                 }
-                else if (selectedInitialLevel == WorkItemType.ProductBacklogItem)
+                else if (selectedInitialLevel == WorkItemType.UserStory)
                 {
                     selectedInitialLevel = WorkItemType.Feature;
                 }
@@ -487,11 +501,11 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
         /// Retrieves the selected initial level work item type from the combo box.
         /// </summary>
         /// <returns>
-        /// The corresponding WorkItemType based on the selected value from the combo box.
+        /// The <see cref="WorkItemType"/> associated with the selected item in the combo box.
         /// </returns>
         private WorkItemType GetSelectedInitialLevelWorkItemType()
         {
-            return EnumHelper.GetEnumFromStringValue<WorkItemType>(cboInitialLevel.SelectedValue.ToString()); ;
+            return ((KeyValuePair<WorkItemType, string>)cboInitialLevel.SelectedItem).Key;
         }
 
         /// <summary>
@@ -526,7 +540,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                     {
                         Id = 0,
                         ParentId = 0,
-                        Type = WorkItemType.ProductBacklogItem,
+                        Type = WorkItemType.UserStory,
                         Title = "Example Work Item",
                         Description = "This is an example work item.",
                         AcceptanceCriteria = "This is an example of an Acceptance Criteria",
@@ -569,7 +583,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             workItem.Type = parentType switch
             {
                 WorkItemType.Epic => WorkItemType.Feature,
-                WorkItemType.Feature => WorkItemType.ProductBacklogItem,
+                WorkItemType.Feature => WorkItemType.UserStory,
                 _ => WorkItemType.Task
             };
 

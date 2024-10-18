@@ -11,5 +11,7 @@
         public const string MESSAGE_WRITE_REQUEST = "Please write a request.";
         public const string MESSAGE_SET_COMMAND = "Please, set the command for \"{0}\" through the Options.";
         public const string COMMAND_JSON_SCHEMA = "Ensure the response is in the following json schema: {0}";
+        public const string WI_PRODUCT_BACKLOG_ITEM = "Product Backlog Item";
+        public const string WI_USER_STORY = "User Story";
     }
 }

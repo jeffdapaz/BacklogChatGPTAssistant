@@ -178,6 +178,10 @@ You can check your quota here: [https://platform.openai.com/account/usage](https
 
 ## Release Notes 📜
 
+### 1.2.0
+
+- Added support for projects that use User Story instead of Product Backlog Item.
+
 ### 1.1.0
 
 - Added the possibility to use your Microsoft Account to authenticate to the Azure Open AI Service through Entra ID.

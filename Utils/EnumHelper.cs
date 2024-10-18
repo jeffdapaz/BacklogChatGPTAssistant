@@ -1,5 +1,7 @@
-﻿using System;
+﻿using JeffPires.BacklogChatGPTAssistant.Models;
+using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace JeffPires.BacklogChatGPTAssistant.Utils
 {
@@ -8,6 +10,23 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
     /// </summary>
     public static class EnumHelper
     {
+        /// <summary>
+        /// Retrieves the string value of a specified work item type.
+        /// If the work item type is a Product Backlog Item, it fetches the value from Azure DevOps.
+        /// </summary>
+        /// <param name="workItemType">The work item type to retrieve the string value for.</param>
+        /// <param name="projectName">The name of the project associated with the work item type.</param>
+        /// <returns>The string value of the work item type.</returns>
+        public static async Task<string> GetWorkItemTypeStringValueAsync(this WorkItemType workItemType, string projectName)
+        {
+            if (workItemType == WorkItemType.UserStory)
+            {
+                return await AzureDevops.GetProjectBacklogItemTypeAsync(projectName);
+            }
+
+            return GetStringValue(workItemType);
+        }
+
         /// <summary>
         /// Gets the string value associated with the specified enum item.
         /// </summary>

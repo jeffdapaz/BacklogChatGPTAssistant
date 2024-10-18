@@ -98,8 +98,32 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
             List<string> iterationPaths = [];
 
             GetIterationPaths(classificationNodes, string.Empty, iterationPaths);
-
             return iterationPaths.OrderBy(x => x).ToList();
+        }
+
+        /// <summary>
+        /// Retrieves the backlog item type for a specified project.
+        /// Checks if the project uses 'Product Backlog Item' or 'User Story' as its backlog item type.
+        /// </summary>
+        /// <param name="projectName">The name of the project to check for backlog item types.</param>
+        /// <returns>
+        /// The backlog item type if found.
+        /// </returns>
+        /// <exception cref="Exception">Thrown when the project does not use 'Product Backlog Item' or 'User Story'.</exception>
+        public static async Task<string> GetProjectBacklogItemTypeAsync(string projectName)
+        {
+            List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItemType> workItemTypes = await workItemClient.GetWorkItemTypesAsync(projectName);
+
+            if (workItemTypes.Any(type => type.Name == Constants.WI_PRODUCT_BACKLOG_ITEM))
+            {
+                return Constants.WI_PRODUCT_BACKLOG_ITEM;
+            }
+            else if (workItemTypes.Any(type => type.Name == Constants.WI_USER_STORY))
+            {
+                return Constants.WI_USER_STORY;
+            }
+
+            throw new Exception($"Project {projectName} does not use 'Product Backlog Item' or 'User Story' as backlog item type. The project must be configured to use one or the other.");
         }
 
         /// <summary>
@@ -120,7 +144,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                FROM workitems
                WHERE [System.TeamProject] = '{projectName}'
                AND [System.IterationPath] = '{iterationPath}'
-               AND [System.WorkItemType] = '{workItemType.GetStringValue()}'
+               AND [System.WorkItemType] = '{await workItemType.GetWorkItemTypeStringValueAsync(projectName)}'
                ORDER BY [System.Id]";
 
             Wiql wiql = new() { Query = wiqlQuery };
@@ -223,7 +247,9 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                 );
             }
 
-            Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem newWorkItem = await workItemClient.CreateWorkItemAsync(patchDocument, project.Id, workItem.Type.GetStringValue());
+            string type = await workItem.Type.GetWorkItemTypeStringValueAsync(project.Name);
+
+            Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem newWorkItem = await workItemClient.CreateWorkItemAsync(patchDocument, project.Id, type);
 
             return newWorkItem.Id.Value;
         }

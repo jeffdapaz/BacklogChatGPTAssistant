@@ -180,7 +180,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                     systemMessages.Add($"{workItem.OptionsInstance.InstructionWorkItemType} {workItemChildrenType.GetStringValue()}");
                 }
 
-                if (!string.IsNullOrWhiteSpace(workItem.OptionsInstance.InstructionChildren) && workItem.Type != WorkItemType.ProductBacklogItem)
+                if (!string.IsNullOrWhiteSpace(workItem.OptionsInstance.InstructionChildren) && workItem.Type != WorkItemType.UserStory)
                 {
                     systemMessages.Add(workItem.OptionsInstance.InstructionChildren);
                 }
@@ -301,8 +301,8 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
             return workItemParentType switch
             {
                 WorkItemType.Epic => WorkItemType.Feature,
-                WorkItemType.Feature => WorkItemType.ProductBacklogItem,
-                WorkItemType.ProductBacklogItem => WorkItemType.Task,
+                WorkItemType.Feature => WorkItemType.UserStory,
+                WorkItemType.UserStory => WorkItemType.Task,
                 _ => WorkItemType.Task
             };
         }
@@ -323,7 +323,7 @@ namespace JeffPires.BacklogChatGPTAssistant.ToolWindows
                     {
                         Id = 0,
                         ParentId = 0,
-                        Type = WorkItemType.ProductBacklogItem,
+                        Type = WorkItemType.UserStory,
                         Title = "Example Work Item",
                         Description = "This is an example work item.",
                         AcceptanceCriteria = "This is an example of an Acceptance Criteria",

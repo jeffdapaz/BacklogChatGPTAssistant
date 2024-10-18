@@ -67,8 +67,8 @@ namespace JeffPires.BacklogChatGPTAssistant.Models
     {
         [EnumStringValue("Task")]
         Task = 0,
-        [EnumStringValue("Product Backlog Item")]
-        ProductBacklogItem = 1,
+        [EnumStringValue("User Story")]
+        UserStory = 1,
         [EnumStringValue("Feature")]
         Feature = 2,
         [EnumStringValue("Epic")]
