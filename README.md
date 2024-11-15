@@ -178,6 +178,10 @@ You can check your quota here: [https://platform.openai.com/account/usage](https
 
 ## Release Notes 📜
 
+### 1.2.1
+
+- Fixed the issue preventing the extension from loading correctly starting from version 17.12.0 of Visual Studio 2022.
+
 ### 1.2.0
 
 - Added support for projects that use User Story instead of Product Backlog Item.
