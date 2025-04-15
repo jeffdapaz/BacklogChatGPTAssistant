@@ -86,7 +86,7 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
             }
 
             chat.AutoTruncateOnContextLengthExceeded = true;
-            chat.RequestParameters.Model = string.IsNullOrWhiteSpace(options.CustomModel) ? options.Model.GetStringValue() : options.CustomModel;
+            chat.RequestParameters.Model = options.Model;
             chat.RequestParameters.Temperature = options.Temperature;
             chat.RequestParameters.MaxTokens = options.MaxTokens;
             chat.RequestParameters.TopP = options.TopP;
@@ -258,17 +258,6 @@ namespace JeffPires.BacklogChatGPTAssistant.Utils
                 azureAPI.ApiVersion = options.AzureApiVersion;
             }
         }
-    }
-
-    /// <summary>
-    /// Enum containing the different types of model languages.
-    /// </summary>
-    public enum ModelLanguageEnum
-    {
-        [EnumStringValue("gpt-4o-2024-08-06")]
-        GPT_4o,
-        [EnumStringValue("gpt-4o-mini")]
-        GPT_4o_Mini
     }
 
     /// <summary>

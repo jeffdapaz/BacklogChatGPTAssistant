@@ -178,6 +178,10 @@ You can check your quota here: [https://platform.openai.com/account/usage](https
 
 ## Release Notes 📜
 
+### 1.3.0
+
+- Due to the fact that OpenAI is always updating the list of models, and also because other LLMs may have their own models, I am setting the "Model" parameter in the extension options as an open field for editing. And because of that, the parameter "Model Language Override" is not more necessary. See the available models [here](https://platform.openai.com/docs/models).
+
 ### 1.2.1
 
 - Fixed the issue preventing the extension from loading correctly starting from version 17.12.0 of Visual Studio 2022.
